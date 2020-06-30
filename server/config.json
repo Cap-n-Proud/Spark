@@ -1,0 +1,58 @@
+{
+  "server": {
+    "name": "ubuntuBot",
+    "serverPort": 54321,
+    "serBaud": 38400,
+    "serPort": "/dev/ttyACM0",
+    "version": "2",
+    "nodeLib": "",
+    "SNFolder": "/home/pi/Documents/SN/",
+    "installPath": "/home/pi/ubuntuBot/",
+    "logfilePath": "/home/pi/Documents/log/",
+    "empty":"N/A"
+  },
+  "telemetry": {
+    "telemetryfilePath": "/home/pi/Documents/telemetry/",
+    "SEPARATOR": ","
+  },
+  "hardware":{
+    "SERVO_1_GPIO": 4,
+    "SERVO_2_GPIO": 17,
+    "SERVO_1_MIN": "0.140",
+    "SERVO_1_MAX": "0.160",
+    "SERVO_2_MIN": "0.140",
+    "SERVO_2_MAX": "0.160"
+  },
+  "ArduinoCfg":{
+    "SERVO_1_GPIO": 4,
+    "SERVO_2_GPIO": 17
+  },
+  "camera": {
+    "TLimgWidth": 2592,
+    "TLimgHeight": 1944,
+    "TLInterval": 10000,
+    "SNimgWidth": 320,
+    "SNimgHeight": 240
+  },
+  "video": {
+    "port": 9999,
+    "videoWidth": 320,
+    "videoHeight": 240,
+    "videoSource": 0,
+    "FPS": 20,
+    "screenMargin": 3,
+    "drawCrosshair": false,
+    "drawOverlayInfo": true,
+    "drawCompass": true,
+    "onScreenColorR": 0,
+    "onScreenColorG": 255,
+    "onScreenColorB": 0,
+    "fontBaseSize": "0.5",
+    "hudColorR": 0,
+    "hudColorG": 255,
+    "hudColorB": 0
+
+  }
+
+}
+

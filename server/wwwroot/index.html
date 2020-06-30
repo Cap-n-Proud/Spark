@@ -1,0 +1,295 @@
+
+
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta content="width=device-width, initial-scale=1.0" name="viewport">
+      <title>bot-Pi | Welcome</title>
+      <meta content="yes" name="mobile-web-app-capable">
+      <link href="www_static/foundation/css/foundation.css" rel="stylesheet">
+      <script src="www_static/foundation/js/vendor/modernizr.js"></script>
+      <script src="www_static/foundation/js/vendor/jquery.js"></script>
+      <script src="www_static/foundation/js/foundation.min.js"></script>
+      <link href="www_static/css/custom.css" rel="stylesheet">
+      <link rel='shortcut icon' type='image/x-icon' href='icons/favicon.ico' />
+      <!-- <script src="js/foundation/foundation.slider.js"></script>-->
+      <script src="www_static/socket.io.js" type="text/javascript"></script>
+      <!--  <script src="jQuery/lib/jquery-1.7.1.js"></script>-->
+      <!--    <link rel="text/html" href="favicon.html">-->
+      <link rel="stylesheet" href="www_static/font-awesome/css/font-awesome.min.css">
+      <link href="manifest.json" rel="manifest">
+   </head>
+   <body>
+
+     <div class="row">
+   <div class="medium-6 columns">
+     <iframe id="videoFeed" src="default.html" width="340" height="260" frameborder="0"></iframe>
+    </div>
+   <div class="medium-6 columns">
+     <iframe id="botControl" src="default.html" width="280" height="280" frameborder="0"></iframe>
+   </div>
+ </div>
+ <div class="row">
+   <div class="medium-6 columns"><i class="fa fa-info-circle"></i>&nbsp;<span id="info">Info</span></div>
+   <div class="medium-6 columns"> <i class="fa fa-terminal"></i>&nbsp;<span id="lastCommand">last command</span></div>
+ </div>
+ <div class="row">
+   <div class="medium-6 columns"><p></p></div>
+   <div class="medium-6 columns"><p></p></div>
+ </div>
+ <div class="row">
+   <div class="medium-2 columns"><a href="#" onclick="shutdown()" class="alert button round" style="color:red;"> <i class="fa fa-power-off"></i></a></div>
+   <div class="small-2 columns"><div class="switch round small right"><i class="fa fa-bolt fa-2x"></i><input id="Motors" type="checkbox" onclick="MotorF(this)"><label for="Motors"></label></div>
+</div>
+   <div class="medium-2 columns"><div class="switch round small right"><i class="fa fa-arrows fa-2x"></i><input id="Video" type="checkbox" onclick="VideoF(this)"><label for="Video"></label></div>
+</div>
+   <div class="medium-2 columns"><div class="switch round small right"><i class="fa fa-video-camera fa-2x"></i><input id="Log" type="checkbox" onclick="LogF(this)"><label for="Log"></label></div>
+</div>
+   <div class="medium-2 columns"><div class="switch round small right"><i class="fa fa-line-chart fa-2x"></i><input id="tGPH" type="checkbox" onclick="toggleTelemetryGPH(this)"><label for="tGPH"></label></div>
+</div>
+   <div class="medium-2 columns"></div>
+</div>
+
+
+      <script>
+         //var myVar = JSON.parse(htmlDecode("<%= JSON.stringify(test) %>"));
+               var serverADDR = "N/A";
+               var videoPort = 'N/A';
+               var serverPort = 'N/A';
+
+                var socket = io();
+                //Slide ranges are automatically calculated as percentage of the default config from Arduino
+                var PID_SLIDE_RANGE = 1.50;
+                //Stuff that needs to happen once the pge is loaded
+                window.onload=function()
+                {
+                var classname = document.getElementsByClassName("PIDControlSlider");
+
+                var myFunction = function() {
+                    var attribute = this.getAttribute("id");
+                    socket.emit('SCMD', this.getAttribute("id")+' '+ this.value);
+                    //alert(this.getAttribute("id")+' '+ this.value);
+                };
+
+                for(var i=0;i<classname.length;i++){
+                    classname[i].addEventListener('change', myFunction, false);
+                }
+
+                 socket.emit('env_val', 'request');
+
+                }
+
+
+
+                var classname = document.getElementsByClassName("AngleControlSlider");
+
+                var myFunction = function() {
+                    var attribute = this.getAttribute("id");
+                    socket.emit('SCMD', this.getAttribute("id")+' '+ this.value);
+                    //alert(this.getAttribute("id")+' '+ this.value);
+                };
+
+                for(var i=0;i<classname.length;i++){
+                    classname[i].addEventListener('change', myFunction, false);
+                }
+
+
+                //Server echoes back commands and this willl update teh remote control to show teh last command
+                socket.on('lastCommand', function(CMD){
+                document.getElementById("lastCommand").innerHTML = CMD.toString();
+                });
+
+                function MotorF(element){
+
+                if (element.checked == true) {
+                socket.emit('SCMD', "Motors 1");
+                }
+                else
+                {
+                socket.emit('SCMD', "Motors 0");
+                }
+                }
+
+                function AutoTune(element){
+
+                if (element.checked == true) {
+                socket.emit('SCMD', "AUTOTUNE 1");
+                }
+                else
+                {
+                socket.emit('SCMD', "AUTOTUNE 0");
+                }
+                }
+
+
+
+
+
+                function LogF(element){
+                if (element.checked == true) {
+                socket.emit('SerCMD', "LOG_ON");
+                }
+                else
+                {
+                socket.emit('SerCMD', "LOG_OFF");
+                }
+                }
+
+                function ThrottleSet(val){
+                socket.emit('SCMD', 'Throttle ' + val);
+                document.getElementById("ThrottleVal").value = val;
+
+                }
+
+                function SteerSet(val){
+                socket.emit('SCMD', 'Steer ' + val);
+                document.getElementById("SteerVal").value = val;
+
+                }
+
+                function prntCfg(){
+                socket.emit('SCMD', "printConfig");
+
+                }
+
+                function shutdown(){
+                socket.emit('SHUTDOWN', "now");
+                }
+
+                function sendCMD() {
+                 //document.getElementById("CMD").innerHTML = document.getElementById("right-label").value;
+                  socket.emit('SCMD', document.getElementById("SCMDCommand").value);
+                }
+
+                socket.on('Info', function(CMD){
+                document.getElementById("Info").innerHTML = CMD.replace("\n", "<br />");
+                });
+
+
+                socket.on('status', function (y, p, r, b, dISTE) {
+                    document.getElementById("BAL").innerHTML = dISTE;
+                    document.getElementById("Pitch").innerHTML = p;
+                    document.getElementById("Compass").innerHTML = y;
+
+                });
+
+                socket.on('CPUInfo', function (temp, usage) {
+                document.getElementById("CPUInfo").innerHTML = temp;
+
+                });
+
+                socket.on('cpuUsageUpdate', function (CPU) {
+                document.getElementById("CPU").innerHTML = CPU;
+                });
+
+
+
+                //socket.on('connected', function(V, PID){
+                //   started=0;
+                //   document.getElementById("Info").innerHTML = 'Server: ' + V + ' Firmware: ' + PID['FirmwareVersion'];
+                  //Set defalut values for the PID sliders
+
+                //     });
+
+
+                function setSliders(PID){
+                     var PIDSlider = document.getElementsByClassName("PIDControlSlider");
+                  var arrayLength = PIDSlider.length;
+
+                  for (var i = 0; i < arrayLength; i++) {
+                  //console.log(PIDSlider[i].id + ' ' + parseInt(PID[PIDSlider[i].id]));
+                      document.getElementById(PIDSlider[i].id).value = parseInt(PID[PIDSlider[i].id]);
+                      document.getElementById(PIDSlider[i].id).max = (1 + PID_SLIDE_RANGE)*parseInt(PID[PIDSlider[i].id]);
+                      document.getElementById(PIDSlider[i].id).min = (1 - PID_SLIDE_RANGE)*parseInt(PID[PIDSlider[i].id]);
+                      document.getElementById(PIDSlider[i].id + 'Val').value = parseInt(PID[PIDSlider[i].id]);
+                  }
+
+                    //console.log(' ' + parseInt(PID['calibratedZeroAngle']));
+                      document.getElementById('calibratedZeroAngle').value = parseInt(PID['calibratedZeroAngle']);
+                document.getElementById('calibratedZeroAngle').max = (1 + PID_SLIDE_RANGE)*parseInt(PID['calibratedZeroAngle']);
+                document.getElementById('calibratedZeroAngle').min = (1 - PID_SLIDE_RANGE)*parseInt(PID['calibratedZeroAngle']);
+                document.getElementById('calibratedZeroAngleVal').value = parseInt(PID['calibratedZeroAngle']);
+
+                }
+
+                //server replies to event env_val with a envent 'connected' and some enviromentl variables
+                socket.on('connected', function(info, serverADDR, sPort, MJPEGPort){
+                started=0;
+
+                 serverADDR = serverADDR.toString();
+                 serverPort = sPort.toString();
+                 MJPEGPort = MJPEGPort.toString();
+                document.getElementById("botControl").src = 'http://' + serverADDR + ':' + sPort + '/vj';
+                //document.getElementById('videoFeed').src = 'http://' + serverADDR + ':' + MJPEGPort + '/video';
+                //document.getElementById("telemetryGPH").src = '';
+                //console.log('http://' + serverADDR + ':' + MJPEGPort);
+                document.getElementById("info").innerHTML = info.toString();
+                //document.getElementById("CMD").innerHTML = 'http://' + serverADDR + ':' + serverPort + '/vj';
+                //setSliders(PID);
+                // document.getElementById("Info").innerHTML = server;
+
+
+                });
+
+
+                function VideoF(element) {
+                var status = 0;
+                  if (element.checked == true) {
+                 socket.emit('Video', "cameraON.sh");
+                 status = 1;
+
+
+
+                  } else {
+                 socket.emit('Video', "cameraOFF.sh");
+                 status = 0;
+                 }
+
+                if (status == 1){
+                setTimeout(camFeedRefresh, 1000);
+                }
+                else
+                {
+                setTimeout(camOFF, 1000);
+
+                }
+                }
+
+                function camFeedRefresh(){
+                //  document.getElementById('videoFeed').src = document.getElementById('videoFeed').src = document.getElementById("videoFeed").src = 'http://' + serverADDR + ':' + serverPort + '/video';
+
+
+                }
+
+                function camOFF(){
+                document.getElementById('videoFeed').src = "default.html";
+
+                }
+
+                function takeSnapshot(element) {
+                socket.emit('takeSnapShot');
+                }
+
+                function toggleTelemetryGPH(element){
+
+                if (element.checked == true) {
+                  document.getElementById('telemetryGPH').src = document.getElementById('telemetryGPH').src = document.getElementById("telemetryGPH").src = 'http://' + serverADDR + ':' + serverPort + '/livedata.html';
+                  document.getElementById("Info").innerHTML = 'http://' + serverADDR + ':' + serverPort + '/livedata.html';
+
+                }
+                else
+                {
+                  document.getElementById("telemetryGPH").src = '';//'default.html';
+
+                }
+                }
+
+
+      </script>
+      <script>
+         $(document).foundation();
+      </script>
+      <script>
+      </body>
+      </html>
