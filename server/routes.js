@@ -31,7 +31,7 @@ app.get('/livedata', function(req, res) {
 });
 
 app.get('/video', function(req, res) {
-  res.sendFile(__dirname + '/wwwroot/video.html');
+  res.sendFile(__dirname + '/wwwroot/videoFeed.html');
   res.end;
 });
 

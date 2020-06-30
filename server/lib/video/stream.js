@@ -25,16 +25,16 @@ const stream = (server) => {
     /**
      * Since video/image transformations are computionally expensive operations, these operations are performed independent of live feed streaming.
      */
-    setInterval(() => {
-        const frame = videoCap.read();
-        const frameWithFaces = faceDetector(frame);
-        const imageWithFaces = cv.imencode('.jpg', frameWithFaces).toString('base64');
-        io.emit('new-frame', { transformed: imageWithFaces });
-    }, 10000 / fps);
+    // setInterval(() => {
+    //     const frame = videoCap.read();
+    //     const frameWithFaces = faceDetector(frame);
+    //     const imageWithFaces = cv.imencode('.jpg', frameWithFaces).toString('base64');
+    //     io.emit('new-frame', { transformed: imageWithFaces });
+    // }, 10000 / fps);
 };
 
 /**
- * 
+ *
  * Face detection transformation on the stream
  */
 const faceDetector = (frame) => {
