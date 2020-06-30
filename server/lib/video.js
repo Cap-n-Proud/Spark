@@ -62,8 +62,8 @@ function startVideoFeed(socket, videoWidth, videoHeight, fps) {
         frame++;
         im = videoCap.read();
         if (config.video.drawCompass) drawCompass(im, videoWidth, videoHeight, server.Telemetry['yaw']);
-        if config.video.drawCrosshair) drawCrosshair(im, videoWidth, videoHeight);
-        if config.video.drawOverlayInfo) drawOverlayInfo(im, videoWidth, videoHeight, rss, fps);
+        if (config.video.drawCrosshair) drawCrosshair(im, videoWidth, videoHeight);
+        if (config.video.drawOverlayInfo) drawOverlayInfo(im, videoWidth, videoHeight, rss, fps);
         const outBase64 =  cv.imencode('.jpg', im).toString('base64'); // Perform base64 encoding
         if (im.rows > 0 && im.cols > 0) {
             socket.emit('new-frame', { live: image });
