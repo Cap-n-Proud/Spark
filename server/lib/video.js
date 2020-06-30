@@ -1,26 +1,22 @@
-var nconf = require('nconf');
-nconf.argv()
-    .env()
-    .file({
-        file: '/home/pi/ubuntuBot/server/app/config.json'
-    });
+
+let rawdata = fs.readFileSync(__dirname + '/config.json');
+let config = JSON.parse(rawdata);
 
 const cv = require('opencv4nodejs');
-var server = require('../server');
 
 //var exec = require('child_process').exec;
 
-const FPS = nconf.get('video:FPS');
-var screenMargin = nconf.get('video:screenMargin');
-const videoSource = nconf.get('video:videoSource');
-const hudColorR = nconf.get('video:hudColorR');
-const hudColorG = nconf.get('video:hudColorG');
-const hudColorB = nconf.get('video:hudColorB');
-const onScreenColorR = nconf.get('video:onScreenColorR');
-const onScreenColorG = nconf.get('video:onScreenColorG');
-const onScreenColorB = nconf.get('video:onScreenColorB');
-const videoWidth = nconf.get('video:videoWidth');
-const fontSize = videoWidth * nconf.get('video:fontBaseSize') / 320;
+const FPS = config.video.FPS;
+var screenMargin = config.video.screenMargin;
+const videoSource = config.video.videoSource;
+const hudColorR = config.video.hudColorR;
+const hudColorG = config.video.hudColorG;
+const hudColorB = config.video.hudColorB;
+const onScreenColorR = config.video.onScreenColorR;
+const onScreenColorG = config.video.onScreenColorG;
+const onScreenColorB = config.video.onScreenColorB;
+const videoWidth = config.video.videoWidth;
+const fontSize = videoWidth * config.video.fontBaseSize / 320;
 //const hudColor = hudColorR +', ' + hudColorG + ', ' + hudColorB;
 var frame = 0;
 var e = 0;
@@ -65,9 +61,9 @@ function startVideoFeed(socket, videoWidth, videoHeight, fps) {
         //	if (err) throw err;
         frame++;
         im = videoCap.read();
-        if (server.nconf.get('video:drawCompass')) drawCompass(im, videoWidth, videoHeight, server.Telemetry['yaw']);
-        if (server.nconf.get('video:drawCrosshair')) drawCrosshair(im, videoWidth, videoHeight);
-        if (server.nconf.get('video:drawOverlayInfo')) drawOverlayInfo(im, videoWidth, videoHeight, rss, fps);
+        if (config.video.drawCompass) drawCompass(im, videoWidth, videoHeight, server.Telemetry['yaw']);
+        if config.video.drawCrosshair) drawCrosshair(im, videoWidth, videoHeight);
+        if config.video.drawOverlayInfo) drawOverlayInfo(im, videoWidth, videoHeight, rss, fps);
         const outBase64 =  cv.imencode('.jpg', im).toString('base64'); // Perform base64 encoding
         if (im.rows > 0 && im.cols > 0) {
             socket.emit('new-frame', { live: image });
