@@ -1,6 +1,6 @@
 
 const fs = require('fs');
-let rawdata = fs.readFileSync(__dirname + '/config.json');
+let rawdata = fs.readFileSync(__dirname + '../config.json');
 let config = JSON.parse(rawdata);
 
 const cv = require('opencv4nodejs');
