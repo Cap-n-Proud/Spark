@@ -13,7 +13,7 @@ var io = require('socket.io')(http);
 
 //Includes
 var functions = require(__dirname + '/lib/functions');
-var videoFeed = require(installPath + 'server/app/lib/video');
+var videoFeed = require(__dirname + '/lib/video');
 
 // load the routes
 app.use(express.static('wwwroot'));
