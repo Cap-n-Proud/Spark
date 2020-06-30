@@ -13,6 +13,7 @@ var io = require('socket.io')(http);
 
 //Includes
 var functions = require(__dirname + '/lib/functions');
+var videoFeed = require(installPath + 'server/app/lib/video');
 
 // load the routes
 app.use(express.static('wwwroot'));
@@ -45,6 +46,13 @@ io.on('connection', function(socket){
     socket.emit('connected', startMessage, serverADDR, config.server.serverPort, config.video.port);
 
   });
+
+
+
+  setTimeout(function() {
+      videoFeed.startVideoFeed(socket, videoWidth, videoHeight, fps);
+  }, 2000);
+
 
   socket.on('move', function(dX, dY) {
       //serialPort.write('SCMD move ' + Math.round(dX) + ' ' + Math.round(dY) + '\n');
