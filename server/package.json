@@ -1,7 +1,7 @@
 {
-  "name": "socket-chat-example",
-  "version": "0.0.1",
-  "description": "my first socket.io app",
+  "name": "spark",
+  "version": "0.1.0",
+  "description": "Nodejs based robot",
   "dependencies": {
     "express": "^4.15.2",
     "ping": "^0.2.3",
@@ -13,6 +13,6 @@
   },
   "main": "server_test.js",
   "devDependencies": {},
-  "author": "",
-  "license": "ISC"
+  "author": "Paolo Negrini",
+  "license": "MIT"
 }
