@@ -27,7 +27,7 @@
 #define TO_RAD(x) (x * 0.01745329252)  // *pi/180
 #define TO_DEG(x) (x * 57.2957795131)  // *180/pi
 #define speedMultiplier 1
-#define SERIAL_BAUD 38400
+#define SERIAL_BAUD 115200
 #define CONFIG_START 32 //EEPROM address to start the config
 
 
@@ -75,20 +75,12 @@ byte b[sizeof(Configuration)];
 
 
 struct IMU_data {
-  double kalAngleX;
-  double kalAngleY;
-  double kalAngleZ;
-  double gyroXangle;
-  double gyroYangle;
-  double gyroZangle;
-  double compAngleX;
-  double compAngleY;
-  double compAngleZ; 
-  double accX;
+  double yaw;
   int16_t tempRaw;
   double roll;
   double pitch;
-  
+  double heading;
+
 };
 
 IMU_data IMU_Readings;
@@ -155,7 +147,6 @@ void setConfiguration(boolean force) {
 
 
 String SEPARATOR = ","; //Used as separator for telemetry
-float ypr[3];// yaw pitch roll
 
 
 int StartL, LoopT;
@@ -231,18 +222,17 @@ void loop() {
 
 
   //updateMotorStatusesTimedAction.check();
-  // ReadIMUTimedAction.check();
   //Read remote commands
   RemoteReadTimedAction.check();
 
-  //Trasmit telemetry
-  TelemetryTXTimedAction.check();
-
+ 
   //===> This crashes teh arduino
   updateMotorSpeedTimedAction.check();
   //updateMotorSpeeds(UserControl[0], UserControl[1]);
   ReadIMU(IMU_Readings);
-  //Serial.println(IMU_Readings.kalAngleX);
+   //Trasmit telemetry
+  TelemetryTXTimedAction.check();
+
   LoopT = millis() - StartL;
 
 }

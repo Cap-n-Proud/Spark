@@ -260,13 +260,15 @@ void TelemetryTX()
   if (!configuration.debug) {
     String telemMarker = "T";
     //Need to calculate parameters here because the main loop has a different frequency
-    TxLoopTime = millis() - TxLoopTime;
+    //TxLoopTime = millis() - TxLoopTime;
 
  
     line = telemMarker + SEPARATOR +
-            String(IMU_Readings.gyroZangle) +  SEPARATOR +
-            String(IMU_Readings.kalAngleY) +  SEPARATOR +
-            String(IMU_Readings.kalAngleX) +  SEPARATOR +
+            String(IMU_Readings.yaw) +  SEPARATOR +
+            String(IMU_Readings.pitch) +  SEPARATOR +
+            String(IMU_Readings.roll) +  SEPARATOR +
+            String(IMU_Readings.heading) +  SEPARATOR +
+            String(LoopT) +  SEPARATOR +
                   F("test") + SEPARATOR;
     Serial.println(line);
 

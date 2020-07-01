@@ -1,225 +1,162 @@
-/* Copyright (C) 2012 Kristian Lauszus, TKJ Electronics. All rights reserved.
 
-  This software may be distributed and modified under the terms of the GNU
-  General Public License version 2 (GPL2) as published by the Free Software
-  Foundation and appearing in the file GPL2.TXT included in the packaging of
-  this file. Please note that GPL2 Section 2[b] requires that all works based
-  on this software must also be made publicly available under the terms of
-  the GPL2 ("Copyleft").
-
-  Contact information
-  -------------------
-
-  Kristian Lauszus, TKJ Electronics
-  Web      :  http://www.tkjelectronics.com
-  e-mail   :  kristianl@tkjelectronics.com
-*/
-
+ //https://github.com/jrowberg/i2cdevlib
 #include <Wire.h>
-#include <Kalman.h> // Source: https://github.com/TKJElectronics/KalmanFilter
+#include <HMC5883L.h>
+//#include <MPU6050.h>
+#include <MPU6050_6Axis_MotionApps_V6_12.h>
 
-#define RESTRICT_PITCH // Comment out to restrict roll to ±90deg instead - please read: http://www.freescale.com/files/sensors/doc/app_note/AN3461.pdf
+HMC5883L compass;
+MPU6050 mpu;
+int16_t mx, my, mz;
+int16_t ax, ay, az;
 
-Kalman kalmanX; // Create the Kalman instances
-Kalman kalmanY;
 
-/* IMU Data */
-double accX, accY, accZ;
-double gyroX, gyroY, gyroZ;
-int16_t tempRaw;
+int previousDegree;
+#define OUTPUT_READABLE_YAWPITCHROLL
 
-double gyroXangle, gyroYangle, gyroZangle; // Angle calculate using the gyro only
-double compAngleX, compAngleY, compAngleZ; // Calculated angle using a complementary filter
-double kalAngleX, kalAngleY, kalAngleZ; // Calculated angle using a Kalman filter
+// MPU control/status vars
+bool dmpReady = false;  // set true if DMP init was successful
+uint8_t mpuIntStatus;   // holds actual interrupt status byte from MPU
+uint8_t devStatus;      // return status after each device operation (0 = success, !0 = error)
+uint16_t packetSize;    // expected DMP packet size (default is 42 bytes)
+uint16_t fifoCount;     // count of all bytes currently in FIFO
+uint8_t fifoBuffer[64]; // FIFO storage buffer
 
-uint32_t timer;
-uint8_t i2cData[14]; // Buffer for I2C data
+// orientation/motion vars
+Quaternion q;           // [w, x, y, z]         quaternion container
+VectorInt16 aa;         // [x, y, z]            accel sensor measurements
+VectorInt16 gy;         // [x, y, z]            gyro sensor measurements
+VectorInt16 aaReal;     // [x, y, z]            gravity-free accel sensor measurements
+VectorInt16 aaWorld;    // [x, y, z]            world-frame accel sensor measurements
+VectorFloat gravity;    // [x, y, z]            gravity vector
+float euler[3];         // [psi, theta, phi]    Euler angle container
+float ypr[3];           // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
 
-// TODO: Make calibration routine
+// packet structure for InvenSense teapot demo
+uint8_t teapotPacket[14] = { '$', 0x02, 0, 0, 0, 0, 0, 0, 0, 0, 0x00, 0x00, '\r', '\n' };
+#define INTERRUPT_PIN 2  // use pin 2 on Arduino Uno & most boards
 
-void initIMU() {
-  Serial.print("Initializing IMU...");
 
-#if ARDUINO >= 157
-  Wire.setClock(400000UL); // Set I2C frequency to 400kHz
-#else
-  TWBR = ((F_CPU / 400000UL) - 16) / 2; // Set I2C frequency to 400kHz
-#endif
+// ================================================================
+// ===               INTERRUPT DETECTION ROUTINE                ===
+// ================================================================
 
-  i2cData[0] = 7; // Set the sample rate to 1000Hz - 8kHz/(7+1) = 1000Hz
-  i2cData[1] = 0x00; // Disable FSYNC and set 260 Hz Acc filtering, 256 Hz Gyro filtering, 8 KHz sampling
-  i2cData[2] = 0x00; // Set Gyro Full Scale Range to ±250deg/s
-  i2cData[3] = 0x00; // Set Accelerometer Full Scale Range to ±2g
-  while (i2cWrite(0x19, i2cData, 4, false)); // Write to all four registers at once
-  while (i2cWrite(0x6B, 0x01, true)); // PLL with X axis gyroscope reference and disable sleep mode
+volatile bool mpuInterrupt = false;     // indicates whether MPU interrupt pin has gone high
+void dmpDataReady() {
+  mpuInterrupt = true;
+}
 
-  while (i2cRead(0x75, i2cData, 1));
-  if (i2cData[0] != 0x68) { // Read "WHO_AM_I" register
-    Serial.print(F("Error reading IMU sensor"));
-    while (1);
+
+void initIMU()
+{
+  #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
+Wire.begin();
+  #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
+        Fastwire::setup(400, true);
+  #endif
+
+   // load and configure the DMP
+  Serial.println(F("Initializing DMP..."));
+  devStatus = mpu.dmpInitialize();
+
+  // Enable bypass mode
+  mpu.setI2CMasterModeEnabled(false);
+  mpu.setI2CBypassEnabled(true);
+  mpu.setSleepEnabled(false);
+
+  // Initialize HMC5883L
+  compass.initialize();
+  
+  Serial.println("Testing device connections...");
+    Serial.println(compass.testConnection() ? "HMC5883L connection successful" : "HMC5883L connection failed");
+
+
+  // initialize device
+  Serial.println(F("Initializing I2C devices..."));
+ //devStatus = mpu.initialize();
+  pinMode(INTERRUPT_PIN, INPUT);
+
+  // verify connection
+  Serial.println(F("Testing device connections..."));
+  Serial.println(mpu.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
+
+  // wait for ready
+//  Serial.println(F("\nSend any character to begin DMP programming and demo: "));
+//  while (Serial.available() && Serial.read()); // empty buffer
+//  while (!Serial.available());                 // wait for data
+//  while (Serial.available() && Serial.read()); // empty buffer again
+
+
+  // supply your own gyro offsets here, scaled for min sensitivity
+  mpu.setXGyroOffset(51);
+  mpu.setYGyroOffset(8);
+  mpu.setZGyroOffset(21);
+  mpu.setXAccelOffset(1150);
+  mpu.setYAccelOffset(-50);
+  mpu.setZAccelOffset(1060);
+  // make sure it worked (returns 0 if so)
+  if (devStatus == 0) {
+    // Calibration Time: generate offsets and calibrate our MPU6050
+    mpu.CalibrateAccel(6);
+    mpu.CalibrateGyro(6);
+    Serial.println();
+    mpu.PrintActiveOffsets();
+    // turn on the DMP, now that it's ready
+    Serial.println(F("Enabling DMP..."));
+    mpu.setDMPEnabled(true);
+
+    // enable Arduino interrupt detection
+    Serial.print(F("Enabling interrupt detection (Arduino external interrupt "));
+    Serial.print(digitalPinToInterrupt(INTERRUPT_PIN));
+    Serial.println(F(")..."));
+    attachInterrupt(digitalPinToInterrupt(INTERRUPT_PIN), dmpDataReady, RISING);
+    mpuIntStatus = mpu.getIntStatus();
+
+    // set our DMP Ready flag so the main loop() function knows it's okay to use it
+    Serial.println(F("DMP ready! Waiting for first interrupt..."));
+    dmpReady = true;
+
+    // get expected DMP packet size for later comparison
+    packetSize = mpu.dmpGetFIFOPacketSize();
+  } else {
+    // ERROR!
+    // 1 = initial memory load failed
+    // 2 = DMP configuration updates failed
+    // (if it's going to break, usually the code will be 1)
+    Serial.print(F("DMP Initialization failed (code "));
+    Serial.print(devStatus);
+    Serial.println(F(")"));
   }
-
-  delay(100); // Wait for sensor to stabilize
-
-  /* Set kalman and gyro starting angle */
-  while (i2cRead(0x3B, i2cData, 6));
-  accX = (int16_t)((i2cData[0] << 8) | i2cData[1]);
-  accY = (int16_t)((i2cData[2] << 8) | i2cData[3]);
-  accZ = (int16_t)((i2cData[4] << 8) | i2cData[5]);
-
-  // Source: http://www.freescale.com/files/sensors/doc/app_note/AN3461.pdf eq. 25 and eq. 26
-  // atan2 outputs the value of -π to π (radians) - see http://en.wikipedia.org/wiki/Atan2
-  // It is then converted from radians to degrees
-#ifdef RESTRICT_PITCH // Eq. 25 and 26
-  double roll  = atan2(accY, accZ) * RAD_TO_DEG;
-  double pitch = atan(-accX / sqrt(accY * accY + accZ * accZ)) * RAD_TO_DEG;
-#else // Eq. 28 and 29
-  double roll  = atan(accY / sqrt(accX * accX + accZ * accZ)) * RAD_TO_DEG;
-  double pitch = atan2(-accX, accZ) * RAD_TO_DEG;
-#endif
-
-  kalmanX.setAngle(roll); // Set starting angle
-  kalmanY.setAngle(pitch);
-  gyroXangle = roll;
-  gyroYangle = pitch;
-  compAngleX = roll;
-  compAngleY = pitch;
-
-
-  Serial.println("...done ");
-  return 0;
-
 }
 
 
-void ReadIMU(IMU_data &IMU) {
-  timer = micros();
-  /* Update all the values */
-  while (i2cRead(0x3B, i2cData, 14));
-  accX = (int16_t)((i2cData[0] << 8) | i2cData[1]);
-  accY = (int16_t)((i2cData[2] << 8) | i2cData[3]);
-  accZ = (int16_t)((i2cData[4] << 8) | i2cData[5]);
-  tempRaw = (int16_t)((i2cData[6] << 8) | i2cData[7]);
-  gyroX = (int16_t)((i2cData[8] << 8) | i2cData[9]);
-  gyroY = (int16_t)((i2cData[10] << 8) | i2cData[11]);
-  gyroZ = (int16_t)((i2cData[12] << 8) | i2cData[13]);;
 
-  double dt = (double)(micros() - timer) / 1000000; // Calculate delta time
+void ReadIMU(IMU_data &IMU)
+{
+  long x = micros();
+ compass.getHeading(&mx, &my, &mz); // display tab-separated gyro x/y/z values
+   float heading = atan2(my, mx);
+    if(heading < 0)
+      heading += 2 * M_PI;
+    
+    IMU.heading = (heading * 180/M_PI);
+    // if programming failed, don't try to do anything
+  if (!dmpReady) return;
+  // read a packet from FIFO
+  if (mpu.dmpGetCurrentFIFOPacket(fifoBuffer)) { // Get the Latest packet 
 
-  // Source: http://www.freescale.com/files/sensors/doc/app_note/AN3461.pdf eq. 25 and eq. 26
-  // atan2 outputs the value of -π to π (radians) - see http://en.wikipedia.org/wiki/Atan2
-  // It is then converted from radians to degrees
-  //https://engineering.stackexchange.com/questions/3348/calculating-pitch-yaw-and-roll-from-mag-acc-and-gyro-data
-#ifdef RESTRICT_PITCH // Eq. 25 and 26
-  double roll  = atan2(accY, accZ) * RAD_TO_DEG;
-  double pitch = atan(-accX / sqrt(accY * accY + accZ * accZ)) * RAD_TO_DEG;
-   // yaw = 180 * atan (accelerationZ/sqrt(accelerationX*accelerationX + accelerationZ*accelerationZ))/M_PI;
-  double yaw = atan(accZ/sqrt(accX*accX + accZ * accZ))* RAD_TO_DEG;
-  //double yaw = atan2(accZ, accZ);
 
-#else // Eq. 28 and 29
-  double roll  = atan(accY / sqrt(accX * accX + accZ * accZ)) * RAD_TO_DEG;
-  double pitch = atan2(-accX, accZ) * RAD_TO_DEG;
-  //double yaw = atan(accZ/sqrt(accX*accX + accZ * accZ))* RAD_TO_DEG; //need to be tested!!!
+
+#ifdef OUTPUT_READABLE_YAWPITCHROLL
+    // display Euler angles in degrees
+    mpu.dmpGetQuaternion(&q, fifoBuffer);
+    mpu.dmpGetGravity(&gravity, &q);
+    mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
+   IMU.yaw = ypr[0] * 180 / M_PI;
+   IMU.pitch = ypr[1] * 180 / M_PI;
+   IMU.roll = ypr[2] * 180 / M_PI;
 #endif
 
-  double gyroXrate = gyroX / 131.0; // Convert to deg/s
-  double gyroYrate = gyroY / 131.0; // Convert to deg/s
-  double gyroZrate = gyroZ / 131.0; // Convert to deg/s
-
-#ifdef RESTRICT_PITCH
-  // This fixes the transition problem when the accelerometer angle jumps between -180 and 180 degrees
-  if ((roll < -90 && kalAngleX > 90) || (roll > 90 && kalAngleX < -90)) {
-    kalmanX.setAngle(roll);
-    compAngleX = roll;
-    kalAngleX = roll;
-    gyroXangle = roll;
-  } else
-    kalAngleX = kalmanX.getAngle(roll, gyroXrate, dt); // Calculate the angle using a Kalman filter
-
-  if (abs(kalAngleX) > 90)
-    gyroYrate = -gyroYrate; // Invert rate, so it fits the restriced accelerometer reading
-  kalAngleY = kalmanY.getAngle(pitch, gyroYrate, dt);
-#else
-  // This fixes the transition problem when the accelerometer angle jumps between -180 and 180 degrees
-  if ((pitch < -90 && kalAngleY > 90) || (pitch > 90 && kalAngleY < -90)) {
-    kalmanY.setAngle(pitch);
-    compAngleY = pitch;
-    kalAngleY = pitch;
-    gyroYangle = pitch;
-  } else
-    kalAngleY = kalmanY.getAngle(pitch, gyroYrate, dt); // Calculate the angle using a Kalman filter
-
-  if (abs(kalAngleY) > 90)
-    gyroXrate = -gyroXrate; // Invert rate, so it fits the restriced accelerometer reading
-  kalAngleX = kalmanX.getAngle(roll, gyroXrate, dt); // Calculate the angle using a Kalman filter
-#endif
-
-  gyroXangle += gyroXrate * dt; // Calculate gyro angle without any filter
-  gyroYangle += gyroYrate * dt;
-  gyroZangle += gyroZrate * dt;
-//gyroXangle += kalmanX.getRate() * dt; // Calculate gyro angle using the unbiased rate
-  //gyroYangle += kalmanY.getRate() * dt;
-
-  compAngleX = 0.93 * (compAngleX + gyroXrate * dt) + 0.07 * roll; // Calculate the angle using a Complimentary filter
-  compAngleY = 0.93 * (compAngleY + gyroYrate * dt) + 0.07 * pitch;
-  compAngleZ = 0.93 * (compAngleZ + gyroZrate * dt) + 0.07 * yaw;
-
-  // Reset the gyro angle when it has drifted too much
-  if (gyroXangle < -180 || gyroXangle > 180)
-    gyroXangle = kalAngleX;
-  if (gyroYangle < -180 || gyroYangle > 180)
-    gyroYangle = kalAngleY;
-
-  IMU.kalAngleX = kalAngleX;
-  IMU.kalAngleY = kalAngleY;
-  IMU.gyroXangle = gyroXangle;
-  IMU.gyroYangle = gyroYangle;
-  IMU.gyroZangle = gyroZangle;
-  IMU.compAngleX = compAngleX;
-  IMU.compAngleY = compAngleY;
-  IMU.compAngleZ = compAngleZ;
-  IMU.accX = accX;
-  IMU.tempRaw = tempRaw;
-  IMU.roll = roll;
-  IMU.pitch = pitch;
-  return 0;
-
-}
-void printIMU() {
-
-  /* Print Data */
-  //#if 0 // Set to 1 to activate
-  //  Serial.print(accX); Serial.print("\t");
-  //  Serial.print(accY); Serial.print("\t");
-  //  Serial.print(accZ); Serial.print("\t");
-  //
-  //  Serial.print(gyroX); Serial.print("\t");
-  ////  Serial.print(gyroY); Serial.print("\t");
-  ////  Serial.print(gyroZ); Serial.print("\t");
-  //
-  //  Serial.print("\t");
-  //#endif
-  //
-  //  Serial.print(roll); Serial.print("\t");
-  ////  Serial.print(gyroXangle); Serial.print("\t");
-  // Serial.print(compAngleX); Serial.print("\t");
-  // Serial.print(kalAngleX); Serial.print("\t");
-  //
-  //  Serial.print("\t");
-  //
-  //  Serial.print(pitch); Serial.print("\t");
-  //  //Serial.print(gyroYangle); Serial.print("\t");
-  //  Serial.print(compAngleY); Serial.print("\t");
-  //  Serial.print(kalAngleY); Serial.print("\t");
-  //
-  //#if 0 // Set to 1 to print the temperature
-  //  Serial.print("\t");
-  //
-  //  double temperature = (double)tempRaw / 340.0 + 36.53;
-  //  Serial.print(temperature); Serial.print("\t");
-  //#endif
-  //
-  //  Serial.print("\r\n");
-  //  delay(2);
+  }
+    
 }
