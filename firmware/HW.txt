@@ -1,0 +1,4 @@
+GY-86 10DOF Flight Control Module
+MPU6050 3-axis gyroscope and 3-axis accelerometer
+HMC5883L 3-axis magnetometer
+MS5611 barometer

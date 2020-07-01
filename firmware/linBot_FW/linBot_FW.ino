@@ -4,22 +4,20 @@
 //------------------ Libraries ------------------
 
 //#define DEBUG
-#include "DebugUtils.h"
-#include "CommunicationUtils.h"
-#include "FreeIMU.h"
+//#include "DebugUtils.h"
+//#include "CommunicationUtils.h"
 #include <Wire.h>
 #include <SPI.h>
-#include <I2Cdev.h>
-#include <MPU60X0.h>
-#define M_PI 3.14159265358979323846f
-#include <MS561101BA.h>
-#include <HMC58X3.h>
+//#include <I2Cdev.h>
+//#include <MPU60X0.h>
+//#include <MS561101BA.h>
+//#include <HMC58X3.h>
 
-#include <TimedAction.h> // for updating sensors and debug http://bit.ly/pATDBi http://playground.arduino.cc/Code/TimedAction
+#include <TimedAction.h> // for updating sensors and debug https://github.com/Glumgad/TimedAction.git
 #include <EEPROM.h> // for storing configuraion
 //#include <avr/wdt.h> // watchdog http://savannah.nongnu.org/projects/avr-libc/
-#include <KalmanFilter.h> // github.com/nut-code-monkey/KalmanFilter-for-Arduino
-                          // Try also: https://github.com/TKJElectronics/KalmanFilter.git
+//#include <KalmanFilter.h> // github.com/nut-code-monkey/KalmanFilter-for-Arduino
+// Try also: https://github.com/TKJElectronics/KalmanFilter.git
 #include <AccelStepper.h> //https://github.com/adafruit/AccelStepper.git
 
 #define SERIALCOMMAND_HARDWAREONLY 1
@@ -31,6 +29,7 @@
 #define speedMultiplier 1
 #define SERIAL_BAUD 38400
 #define CONFIG_START 32 //EEPROM address to start the config
+
 
 /* Configutation parameters */
 struct Configuration {
@@ -74,6 +73,26 @@ struct Configuration {
 Configuration configuration;
 byte b[sizeof(Configuration)];
 
+
+struct IMU_data {
+  double kalAngleX;
+  double kalAngleY;
+  double kalAngleZ;
+  double gyroXangle;
+  double gyroYangle;
+  double gyroZangle;
+  double compAngleX;
+  double compAngleY;
+  double compAngleZ; 
+  double accX;
+  int16_t tempRaw;
+  double roll;
+  double pitch;
+  
+};
+
+IMU_data IMU_Readings;
+
 double UserControl[1]; //Steer, Throttle
 
 void setConfiguration(boolean force) {
@@ -81,27 +100,27 @@ void setConfiguration(boolean force) {
   // running for the first time?
   uint8_t codeRunningForTheFirstTime = EEPROM.read(CONFIG_START); // flash bytes will be 255 at first run
   if (codeRunningForTheFirstTime || force) {
-    if (configuration.debug){
+    if (configuration.debug) {
       Serial.print("No config found, defaulting ");
     }
     /* First time running, set defaults */
-    configuration.FirmwareVersion = "0.1";
-    configuration.Rin1Pin=4;
-    configuration.Rin2Pin=5;
-    configuration.Rin3Pin=6;
-    configuration.Rin4Pin=7;
-    configuration.Lin1Pin=8;
-    configuration.Lin2Pin=9;
-    configuration.Lin3Pin=10;
-    configuration.Lin4Pin=11;
-    configuration.stepsPerRev=200;
-    configuration.maxSpeed=300;
+    configuration.FirmwareVersion = "0.2";
+    configuration.Rin1Pin = 4;
+    configuration.Rin2Pin = 5;
+    configuration.Rin3Pin = 6;
+    configuration.Rin4Pin = 7;
+    configuration.Lin1Pin = 8;
+    configuration.Lin2Pin = 9;
+    configuration.Lin3Pin = 10;
+    configuration.Lin4Pin = 11;
+    configuration.stepsPerRev = 200;
+    configuration.maxSpeed = 300;
     configuration.maxAcc = 25;
 
     configuration.steerGain = 0.7;
     configuration.throttleGain = 1;
     configuration.Maxsteer = 100; //Max allowed percentage difference. Up to the remote to provide the right scale.
-    configuration.Maxthrottle = 100; //Max speed expressed in inclination degrees. Up to the remote to provide the right scale.
+    configuration.Maxthrottle = 100; // Up to the remote to provide the right scale.
 
     configuration.motorsON = 0;
 
@@ -110,7 +129,7 @@ void setConfiguration(boolean force) {
     configuration.commandDelay = 5;
 
     configuration.debugLevel = 0;
-    configuration.debugSampleRate = 1000;
+    configuration.debugSampleRate = 100;
     //  configuration.speedPIDSetpointDebug = 1;
     configuration.speedPIDOutputDebug = 1;
     configuration.speedPIDInputDebug = 1;
@@ -135,13 +154,8 @@ void setConfiguration(boolean force) {
 };
 
 
-
 String SEPARATOR = ","; //Used as separator for telemetry
-float ypr[3];
-float altimeter; // yaw pitch roll
-
-// Set the FreeIMU object
-FreeIMU my3IMU = FreeIMU();
+float ypr[3];// yaw pitch roll
 
 
 int StartL, LoopT;
@@ -152,25 +166,27 @@ int currentSpeedR = 0;
 
 SerialCommand SCmd;   // The SerialCommand object
 
-//AccelStepper motorR(4, configuration.Rin1Pin, configuration.Rin2Pin, configuration.Rin3Pin, configuration.Rin4Pin);
-//AccelStepper motorL(4, configuration.Lin1Pin, configuration.Lin2Pin, configuration.Lin3Pin, configuration.Lin4Pin);
+AccelStepper motorR(4, configuration.Rin1Pin, configuration.Rin2Pin, configuration.Rin3Pin, configuration.Rin4Pin);
+AccelStepper motorL(4, configuration.Lin1Pin, configuration.Lin2Pin, configuration.Lin3Pin, configuration.Lin4Pin);
 
-//Stepper motorR(200, 4, 5, 6, 7);
-//Stepper motorL(200, 8, 9, 10, 11);
-AccelStepper motorR(4, 4, 5, 6, 7);
-AccelStepper motorL(4, 8, 9, 10, 11);
+//AccelStepper motorR(4, 4, 5, 6, 7);
+//AccelStepper motorL(4, 8, 9, 10, 11);
 
-  // These take care of the timing of things
-TimedAction debugTimedAction = TimedAction(configuration.debugSampleRate, debugEverything); //Print debug info
-//TimedAction updateMotorSpeedTimedAction = TimedAction(100, updateMotorSpeeds); //
+// These take care of the timing of things
+
+//Print debug info
+TimedAction debugTimedAction = TimedAction(configuration.debugSampleRate, debugEverything);
+
+TimedAction updateMotorSpeedTimedAction = TimedAction(100, updateMotorSpeeds); //
+
 //ADD HERE A TIMED ACTIONS FOR SENSORS
 //TimedAction remoteControlWatchdogTimedAction = TimedAction(5000, stopRobot);
 
 //Reads serial for commands
 TimedAction RemoteReadTimedAction = TimedAction(250, RemoteRead);
 
-//Reads serial for commands
-TimedAction ReadIMUTimedAction = TimedAction(100, ReadIMU);
+//Reads IMU
+//TimedAction ReadIMUTimedAction = TimedAction(100, ReadIMU);
 
 //Upload telemetry data
 TimedAction TelemetryTXTimedAction = TimedAction(250, TelemetryTX);
@@ -178,31 +194,31 @@ TimedAction TelemetryTXTimedAction = TimedAction(250, TelemetryTX);
 
 //------------------ Setup ------------------
 void setup() {
+    StartL = millis();
+
   //pinMode(configuration.speakerPin, OUTPUT);
 
   Serial.begin(SERIAL_BAUD);
   delay(50);
   Serial.println("Initializing ...");
   // Load config from eeprom
-  setConfiguration(true);
+  setConfiguration(false);
   // init i2c and IMU
   delay(100);
   Wire.begin();
-  UserControl[0]=0;
-  UserControl[1]=0;
-
+  UserControl[0] = 0;
+  UserControl[1] = 0;
   //Init control systems
   controlConfig();
   motorsSetup();
-
-  //wdt_enable(WDTO_2S);
+  //my3IMU.init(); // the parameter enable or disable fast mode
   delay(5);
-  my3IMU.init(); // the parameter enable or disable fast mode
-  delay(5);
-
+  initIMU();
   // Setup callbacks for SerialCommand commands
   SCmd.addCommand("SCMD", setCommand);
   SCmd.addCommand("READ", printCommand);
+     LoopT = millis() - StartL;
+ Serial.print("...all done ");Serial.print(LoopT);Serial.println(" ms");
 
 }
 
@@ -215,37 +231,37 @@ void loop() {
 
 
   //updateMotorStatusesTimedAction.check();
-  ReadIMUTimedAction.check();
+  // ReadIMUTimedAction.check();
+  //Read remote commands
   RemoteReadTimedAction.check();
+
+  //Trasmit telemetry
   TelemetryTXTimedAction.check();
-  //updateMotorSpeedTimedAction.check();
-  updateMotorSpeeds(UserControl[0],UserControl[1]);
- LoopT = millis() - StartL;
+
+  //===> This crashes teh arduino
+  updateMotorSpeedTimedAction.check();
+  //updateMotorSpeeds(UserControl[0], UserControl[1]);
+  ReadIMU(IMU_Readings);
+  //Serial.println(IMU_Readings.kalAngleX);
+  LoopT = millis() - StartL;
 
 }
 
 /* just debug functions. uncomment the debug information you want in debugEverything */
 void debugEverything() {
   /*debugImu();
-  debugAnglePID();
-  debugSpeedPID();
-  //debugISE();
-  //debugAnglePIDCoeff();
-  //debugSpeedPIDCoeff();
-  //debugEncoders();
-  debugMotorSpeeds();
-  //debugMotorCalibrations();
-  //debugMotorSpeedCalibration();
-  //debugChart2();
-  //unrecognizedCMD();
-  debugLoopTime();*/
+    debugAnglePID();
+    debugSpeedPID();
+    //debugISE();
+    //debugAnglePIDCoeff();
+    //debugSpeedPIDCoeff();
+    //debugEncoders();
+    debugMotorSpeeds();
+    //debugMotorCalibrations();
+    //debugMotorSpeedCalibration();
+    //debugChart2();
+    //unrecognizedCMD();
+    debugLoopTime();*/
   Serial.println();
 
 };
-
-void ReadIMU() {
-  my3IMU.getYawPitchRoll(ypr);
-  altimeter = my3IMU.getBaroAlt();
-
-
-}
