@@ -23,7 +23,7 @@ sPort.on('open',function() {
 
 sPort.on('data', function(data) {
   data = data.toString('utf8');
-console.log(data);
-sPort.write("nknjknjkk");
+console.log(data.trim());
+sPort.write("SCMD sdsds");
 
 });
