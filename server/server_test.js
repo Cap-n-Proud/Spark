@@ -13,7 +13,7 @@ var io = require('socket.io')(http);
 
 //Includes
 var functions = require(__dirname + '/lib/functions');
-var videoFeed = require(__dirname + '/lib/video');
+//var videoFeed = require(__dirname + '/lib/video');
 
 // load the routes
 app.use(express.static('wwwroot'));
@@ -49,9 +49,9 @@ io.on('connection', function(socket){
 
 
 
-  setTimeout(function() {
-      videoFeed.startVideoFeed(socket, videoWidth, videoHeight, fps);
-  }, 2000);
+//  setTimeout(function() {
+//      videoFeed.startVideoFeed(socket, videoWidth, videoHeight, fps);
+//  }, 2000);
 
 
   socket.on('move', function(dX, dY) {
