@@ -129,13 +129,14 @@ http.listen(config.server.serverPort, function(){
     if (data.indexOf('T') !== -1) {
         var tokenData = data.split(SEPARATOR);
         var j = 0;
+        console.log("------------------");
         for (var i in Telemetry) {
             Telemetry[i] = tokenData[j];
             j++;
             console.log(i + ' ' + Telemetry[i]);
         }
         j = 0;
-
+        console.log("------------------");
         //eventEmitter.emit('log', data);
 
         if (LogR == 1) {
