@@ -116,6 +116,13 @@ http.listen(config.server.serverPort, function(){
 
   console.log('listening on: ' + serverADDR + ':'+ config.server.serverPort);
   //Read input from Arduino and stores it into a dictionary
+
+
+    setTimeout(function() {
+      sPort.write('READ RemoteInit\n\r');
+      console.log("RemoteInit SENT");
+    }, 2000);
+
   sPort.on('data', function(data, socket) {
     data = data.toString('utf8');
     console.log(data.trim());
