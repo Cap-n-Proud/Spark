@@ -113,15 +113,15 @@ function initSerial(serPort, baudRate) {
       baudRate: Number(baudRate)
   });
 
-  const serialPort = sPort.pipe(new Readline({
-      delimiter: '\r\n'
-  }))
-
+  const serialPort = sPort.pipe(new Readline({ delimiter: '\r\n' }))
   sPort.on('open', function() {
       console.log('Arduino connected on ' + serPort + ' @' + serBaud)
   })
 
 }
+
+
+
 // exports ======================================================================
 exports.initSerial = initSerial;
 exports.rescale = rescale;
