@@ -21,5 +21,9 @@ sPort.on('open',function() {
   console.log('Arduino connected on '+ serPort + ' @' + serBaud)
 })
 
-sPort.on('data', console.log)
+sPort.on('data', function(data) {
+  data = data.toString('utf8');
+console.log(data);
 serialPort.write("nknjknjkk");
+
+)};
