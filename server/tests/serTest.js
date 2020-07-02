@@ -19,15 +19,14 @@ port.pipe(parser)
 //parser.on('data', line => console.log(`> ${line}`))
 //port.write('SCM POWER ON\n')
 
-//> ROBOT ONLINE
-parser.on('data', function(data) {
-//  data = data.toString('utf8');
-console.log(line());
+
+
+// Switches the port into "flowing mode"
+port.on('data', function (data) {
+  console.log('Data:', data)
   setTimeout(function() {
     port.write("SCMD sdsds");
 console.log("===> Command sent");
 }, 5000);
-});
-
-
+})
 //sPort.on('data', console.log)
