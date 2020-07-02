@@ -59,7 +59,6 @@ const sPort = new com(serPort, {
 const serialPort = sPort.pipe(new Readline({ delimiter: '\r\n' }))
 sPort.on('open', function() {
     console.log('Arduino connected on ' + serPort + ' @' + baudRate)
-    sPort.write('READ RemoteInit\n\r');
 
 })
 //------------------------- END Setup serial port -------------------------//
@@ -118,12 +117,10 @@ http.listen(config.server.serverPort, function(){
   //Read input from Arduino and stores it into a dictionary
 
 //TO-DO Arduino should send a signat whrn ready to renasmit and all systems are nintialized
-    setTimeout(function() {
-      sPort.write('READ RemoteInit\n\r');
-      console.log("RemoteInit SENT");
-    }, 7000);
 
-  sPort.on('data', function(data, socket) {
+  serialPort.write('READ RemoteInit\n\r');
+  sPort.write('READ RemoteInit\n\r');
+sPort.on('data', function(data, socket) {
     data = data.toString('utf8');
     //console.log(data.trim());
     if (data.indexOf('TH') !== -1) {
