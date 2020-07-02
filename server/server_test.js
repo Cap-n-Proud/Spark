@@ -135,14 +135,14 @@ parser.on('data', function(data, socket) {
     if ((data.indexOf('T') !== -1) && THReceived == 1) {
         var tokenData = data.split(SEPARATOR);
         var j = 0;
-        console.log("------------------");
+        //console.log("------------------");
         for (var i in Telemetry) {
             Telemetry[i] = tokenData[j];
             j++;
-            console.log(i + ' ' + Telemetry[i]);
+          //  console.log(i + ' ' + Telemetry[i]);
         }
         j = 0;
-        console.log("------------------");
+        //console.log("------------------");
         //eventEmitter.emit('log', data);
 
         if (LogR == 1) {

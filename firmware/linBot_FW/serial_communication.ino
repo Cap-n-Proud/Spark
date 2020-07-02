@@ -26,7 +26,7 @@ void RemoteInit()
             "roll" + SEPARATOR +
             "heading" + SEPARATOR +
             "info" + SEPARATOR +
-            "LoopT";
+            "loop"+ SEPARATOR;
 
   Serial.println(headers);/*
   delay(100);
