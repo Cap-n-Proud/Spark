@@ -2,7 +2,7 @@
   "server": {
     "name": "ubuntuBot",
     "serverPort": 54321,
-    "serBaud": 115200,
+    "serBaud": 38400,
     "serPort": "/dev/ttyACM0",
     "version": "2",
     "nodeLib": "",
