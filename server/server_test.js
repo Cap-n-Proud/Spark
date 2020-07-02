@@ -70,6 +70,8 @@ eventEmitter.on('serialData', function(data) {
     socket.emit('serialData', data);
 });
 
+
+
 io.on('connection', function(socket){
   var myDate = new Date();
   var startMessage = 'Connected ' + config.server.name + ' v' + config.server.version + ' @' + serverADDR + ':'+ config.server.serverPort;
@@ -78,6 +80,10 @@ io.on('connection', function(socket){
     io.emit('chat message', msg);
     });
 
+
+  eventEmitter.on('yprh', function(y,p, r, h) {
+      socket.emit('yprh', y, p, r, h);
+  });
   socket.on('connected', function() {
 
 
@@ -118,7 +124,7 @@ http.listen(config.server.serverPort, function(){
 //TO-DO Arduino should send a signat whrn ready to renasmit and all systems are nintialized
  setTimeout(function() {
 port.write('READ RemoteInit\n\r');
-console.log("===>READ RemoteInit");
+//console.log("===>READ RemoteInit");
 }, 4000);
 parser.on('data', function(data, socket) {
     if (data.indexOf('TH') !== -1) {
@@ -140,6 +146,7 @@ parser.on('data', function(data, socket) {
             Telemetry[i] = tokenData[j];
             j++;
           //  console.log(i + ' ' + Telemetry[i]);
+          eventEmitter.emit('yprh', Telemetry["yaw"], Telemetry["pitch"], Telemetry["roll"],Telemetry["heading"]);
         }
         j = 0;
         //console.log("------------------");
