@@ -122,7 +122,7 @@ http.listen(config.server.serverPort, function(){
   sPort.write('READ RemoteInit\n\r');
 sPort.on('data', function(data, socket) {
     data = data.toString('utf8');
-    //console.log(data.trim());
+    console.log(data.trim());
     if (data.indexOf('TH') !== -1) {
         TelemetryHeader = data.split(SEPARATOR);
         var arrayLength = TelemetryHeader.length;
