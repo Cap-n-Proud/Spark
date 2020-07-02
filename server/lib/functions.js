@@ -105,7 +105,7 @@ return temparature;
 }
 
 
-function initSer() {
+function initSerial() {
 
 //Setup serial port
 const com = require('serialport')
@@ -123,7 +123,7 @@ sPort.on('open', function() {
 })
 }
 // exports ======================================================================
-exports.initSer = initSer;
+exports.initSerial = initSerial;
 exports.rescale = rescale;
 exports.cPUInfo = cPUInfo;
 exports.findMyIP = findMyIP;
