@@ -5,7 +5,7 @@
 // * @alias module:serialport
 
 const serPort = "/dev/ttyACM0"
-const serBaud = "9600"
+const serBaud = "115200"
 
 
 const com = require('serialport')
