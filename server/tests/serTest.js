@@ -26,4 +26,4 @@ sPort.on('data', function(data) {
 console.log(data);
 serialPort.write("nknjknjkk");
 
-)};
+});
