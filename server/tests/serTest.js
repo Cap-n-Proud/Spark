@@ -8,19 +8,21 @@ const serPort = "/dev/ttyACM0"
 const serBaud = "38400"
 
 
-const com = require('serialport')
+const SerialPort = require('serialport')
 const Readline = require('@serialport/parser-readline')
-const sPort = new com(serPort,{
-  baudRate: Number(serBaud)
-});
+const port = new SerialPort(path, { baudRate: 38400 })
 
-const serialPort = sPort.pipe(new Readline({ delimiter: '\r\n' }))
 
+const parser = new Readline()
+port.pipe(parser)
+
+parser.on('data', line => console.log(`> ${line}`))
+port.write('SCM POWER ON\n')
 
 sPort.on('open',function() {
   console.log('Arduino connected on '+ serPort + ' @' + serBaud)
 })
-
+//> ROBOT ONLINE
 // sPort.on('data', function(data) {
 //   data = data.toString('utf8');
 // console.log(data.trim());
@@ -30,5 +32,3 @@ sPort.on('open',function() {
 // console.log("===> Command sent");
 //  }, 2000);
 //});
-
-sPort.on('data', console.log.toString('utf8'))
