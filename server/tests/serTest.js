@@ -19,9 +19,6 @@ port.pipe(parser)
 parser.on('data', line => console.log(`> ${line}`))
 port.write('SCM POWER ON\n')
 
-sPort.on('open',function() {
-  console.log('Arduino connected on '+ serPort + ' @' + serBaud)
-})
 //> ROBOT ONLINE
 // sPort.on('data', function(data) {
 //   data = data.toString('utf8');
