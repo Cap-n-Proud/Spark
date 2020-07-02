@@ -20,7 +20,7 @@ port.pipe(parser)
 //port.write('SCM POWER ON\n')
 
 //> ROBOT ONLINE
-parser.on('data', function(line) {
+parser.on('data', function(data) {
 //  data = data.toString('utf8');
 console.log(line());
   setTimeout(function() {
