@@ -20,10 +20,33 @@ var functions = require(__dirname + '/lib/functions');
 app.use(express.static('wwwroot'));
 require('./routes')(app);
 
-
+initSer();
 
 //SysVars
 var serverADDR = functions.findMyIP();
+
+var LogR = 0;
+var TelemetryFN = 'N/A';
+var prevTel = "";
+var prevPitch = "";
+var THReceived = 0;
+
+var TelemetryHeader = 'N/A';
+var PIDHeader = 'N/A';
+var ArduSysHeader;
+var Telemetry = {};
+var PID = {};
+var PIDVal;
+var ArduSys = {};
+var temperature;
+
+eventEmitter.on('CMDecho', function(data) {
+    socket.emit('CMD', data);
+});
+
+eventEmitter.on('serialData', function(data) {
+    socket.emit('serialData', data);
+});
 
 io.on('connection', function(socket){
   var myDate = new Date();
@@ -68,5 +91,25 @@ io.on('connection', function(socket){
 http.listen(config.server.serverPort, function(){
 
   console.log('listening on: ' + serverADDR + ':'+ config.server.serverPort);
+  //Read input from Arduino and stores it into a dictionary
+  serialPort.on('data', function(data, socket) {
+    if (data.indexOf('T') !== -1) {
+        var tokenData = data.split(SEPARATOR);
+        var j = 0;
 
+        for (var i in Telemetry) {
+            Telemetry[i] = tokenData[j];
+            j++;
+            //console.log(i + ' ' + Telemetry[i]);
+        }
+        j = 0;
+
+        //eventEmitter.emit('log', data);
+
+        if (LogR == 1) {
+        //    functions.addTelemetryRow(telemetryfilePath, TelemetryFN, TelemetryHeader, data, PIDHeader, PIDVal, SEPARATOR)
+        }
+    }
+
+});
 });
