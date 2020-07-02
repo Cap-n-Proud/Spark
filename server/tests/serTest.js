@@ -25,7 +25,7 @@ port.pipe(parser)
 parser.on('data', function (data) {
   console.log('Data:', data)
   setTimeout(function() {
-    port.write("SCMD sdsds");
+    port.write("SCMD sdsds\n");
 console.log("===> Command sent");
 }, 5000);
 })
