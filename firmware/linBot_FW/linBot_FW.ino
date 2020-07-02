@@ -27,7 +27,7 @@
 #define TO_RAD(x) (x * 0.01745329252)  // *pi/180
 #define TO_DEG(x) (x * 57.2957795131)  // *180/pi
 #define speedMultiplier 1
-#define SERIAL_BAUD 38400
+#define SERIAL_BAUD 9600
 #define CONFIG_START 32 //EEPROM address to start the config
 #define OUTPUT_REMOTE
 #define OUTPUT_SERIAL_MONITOR
