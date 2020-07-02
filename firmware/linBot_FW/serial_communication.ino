@@ -61,7 +61,7 @@ void setCommand()
   value2 = SCmd.next();
 
   //This echoes the command back to confirm it is received correctely
-  String cmd = String("SCMD " + String(arg) + " " + String(value) + " " + String(value2));
+  String cmd = String("CMDEcho " + String(arg) + " " + String(value) + " " + String(value2));
   Serial.println(cmd);
 
   if (value != NULL)

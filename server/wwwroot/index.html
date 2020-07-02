@@ -33,14 +33,15 @@
  <!-- JPRH Block -->
 
 <div class="row">
-  <div class="medium-3 columns"><span id="yaw">N/A</span></div>
+  <div class="medium-3 columns"><img src="www_static/images/yaw.png" alt="jaw" width="30" height="30">
+<span id="yaw">N/A</span></div>
   <div class="medium-3 columns"><span id="pitch">N/A</span></div>
-  <div class="medium-3 columns"><span id="roll">N/A</span></div>
+  <div class="medium-3 columns"><img src="www_static/images/roll.png" alt="jaw" width="30" height="30"><span id="roll">N/A</span></div>
   <div class="medium-3 columns"><span id="heading">N/A</span></div>
 </div>
 <div class="row">
    <div class="medium-6 columns"><i class="fa fa-info-circle"></i>&nbsp;<span id="info">Info</span></div>
-   <div class="medium-6 columns"> <i class="fa fa-terminal"></i>&nbsp;<span id="lastCommand">last command</span></div>
+   <div class="medium-6 columns"> <i class="fa fa-terminal"></i>&nbsp;<span id="CMDEcho">last command</span></div>
  </div>
 
  <div class="row">
@@ -105,8 +106,8 @@
 
 
                 //Server echoes back commands and this willl update teh remote control to show teh last command
-                socket.on('lastCommand', function(CMD){
-                document.getElementById("lastCommand").innerHTML = CMD.toString();
+                socket.on('CMDEcho', function(CMD){
+                document.getElementById("CMDEcho").innerHTML = CMD.toString();
                 });
 
                 function MotorF(element){

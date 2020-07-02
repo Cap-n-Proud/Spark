@@ -62,13 +62,6 @@ port.on('open', function() {
 })
 //------------------------- END Setup serial port -------------------------//
 
-eventEmitter.on('CMDecho', function(data) {
-    socket.emit('CMD', data);
-});
-
-eventEmitter.on('serialData', function(data) {
-    socket.emit('serialData', data);
-});
 
 
 
@@ -84,6 +77,15 @@ io.on('connection', function(socket){
   eventEmitter.on('yprh', function(y,p, r, h) {
       socket.emit('yprh', y, p, r, h);
   });
+
+  eventEmitter.on('CMDEcho', function(data) {
+      socket.emit('CMDEcho', data);
+  });
+
+  eventEmitter.on('serialData', function(data) {
+      socket.emit('serialData', data);
+  });
+
   socket.on('connected', function() {
 
 
@@ -107,8 +109,8 @@ io.on('connection', function(socket){
 
 
   socket.on('move', function(dX, dY) {
-      //serialPort.write('SCMD move ' + Math.round(dX) + ' ' + Math.round(dY) + '\n');
-      //console.log('SCMD move ' + Math.round(dX) + ' ' + Math.round(dY));
+      port.write('SCMD move ' + Math.round(dX) + ' ' + Math.round(dY) + '\n');
+      console.log('SCMD move ' + Math.round(dX) + ' ' + Math.round(dY));
 
   });
 
@@ -127,7 +129,11 @@ port.write('READ RemoteInit\n\r');
 //console.log("===>READ RemoteInit");
 }, 4000);
 parser.on('data', function(data, socket) {
-    if (data.indexOf('TH') !== -1) {
+  if (data.indexOf('CMDEcho') !== -1) {
+      eventEmitter.emit('CMDEcho', data);
+  }
+
+if (data.indexOf('TH') !== -1) {
         TelemetryHeader = data.split(SEPARATOR);
         var arrayLength = TelemetryHeader.length;
         for (var i = 0; i < arrayLength; i++) {
