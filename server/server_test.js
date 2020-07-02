@@ -48,7 +48,7 @@ var ArduSys = {};
 var temperature;
 
 console.log(serPort);
-//Setup serial port
+//------------------------- Setup serial port -------------------------//
 const com = require('serialport')
 const Readline = require('@serialport/parser-readline')
 const sPort = new com(serPort, {
@@ -59,6 +59,7 @@ const serialPort = sPort.pipe(new Readline({ delimiter: '\r\n' }))
 sPort.on('open', function() {
     console.log('Arduino connected on ' + serPort + ' @' + serBaud)
 })
+//------------------------- END Setup serial port -------------------------//
 
 eventEmitter.on('CMDecho', function(data) {
     socket.emit('CMD', data);
@@ -112,7 +113,7 @@ http.listen(config.server.serverPort, function(){
 
   console.log('listening on: ' + serverADDR + ':'+ config.server.serverPort);
   //Read input from Arduino and stores it into a dictionary
-  serialPort.on('data', function(data, socket) {
+  sPort.on('data', function(data, socket) {
     if (data.indexOf('T') !== -1) {
         var tokenData = data.split(SEPARATOR);
         var j = 0;
