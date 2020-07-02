@@ -137,7 +137,7 @@ http.listen(config.server.serverPort, function(){
         THReceived = 1;
         //eventEmitter.emit('log', data);
     }
-    if ((data.indexOf('T') !== -1) AND THReceived) {
+    if ((data.indexOf('T') !== -1) && THReceived == 1) {
         var tokenData = data.split(SEPARATOR);
         var j = 0;
         console.log("------------------");
