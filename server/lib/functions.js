@@ -106,17 +106,6 @@ return temparature;
 
 
 function initSerial(serPort, baudRate) {
-  //Setup serial port
-  const com = require('serialport')
-  const Readline = require('@serialport/parser-readline')
-  const sPort = new com(serPort, {
-      baudRate: Number(baudRate)
-  });
-
-  const serialPort = sPort.pipe(new Readline({ delimiter: '\r\n' }))
-  sPort.on('open', function() {
-      console.log('Arduino connected on ' + serPort + ' @' + serBaud)
-  })
 
 }
 
