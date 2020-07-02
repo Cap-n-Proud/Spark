@@ -1,6 +1,7 @@
 'use strict';
 
 const fs = require('fs');
+const events = require('events');
 const eventEmitter = new events.EventEmitter();
 
 let rawdata = fs.readFileSync(__dirname + '/config.json');
