@@ -52,7 +52,7 @@ console.log(serPort);
 //------------------------- Setup serial port -------------------------//
 const SerialPort = require('serialport')
 const Readline = require('@serialport/parser-readline')
-const port = new SerialPort(serPort, { baudRate: Number(serBaud) })
+const port = new SerialPort(serPort, { baudRate: Number(baudRate) })
 const parser = new Readline()
 port.pipe(parser)
 
