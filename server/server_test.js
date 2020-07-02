@@ -23,20 +23,7 @@ app.use(express.static('wwwroot'));
 require('./routes')(app);
 
 
-//Setup serial port
-const com = require('serialport')
-const Readline = require('@serialport/parser-readline')
-const sPort = new com(serPort, {
-    baudRate: Number(serPort)
-});
 
-const serialPort = sPort.pipe(new Readline({
-    delimiter: '\r\n'
-}))
-
-sPort.on('open', function() {
-    console.log('Arduino connected on ' + serPort + ' @' + serBaud)
-})
 //SysVars
 var serverADDR = functions.findMyIP();
 
@@ -59,6 +46,7 @@ var PID = {};
 var PIDVal;
 var ArduSys = {};
 var temperature;
+
 
 eventEmitter.on('CMDecho', function(data) {
     socket.emit('CMD', data);
