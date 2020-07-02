@@ -32,6 +32,7 @@ const serPort = config.server.serPort;
 const baudRate =  config.server.serBaud;
 const serverPort =  config.server.serverPort;
 const version =  config.server.version;
+var SEPARATOR = conf.telemetry.SEPARATOR;
 var LogR = 0;
 var TelemetryFN = 'N/A';
 var prevTel = "";
