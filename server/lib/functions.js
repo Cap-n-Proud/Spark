@@ -105,12 +105,12 @@ return temparature;
 }
 
 
-function initSerial() {
+function initSerial(serPort, baudRate) {
   //Setup serial port
   const com = require('serialport')
   const Readline = require('@serialport/parser-readline')
   const sPort = new com(serPort, {
-      baudRate: Number(serPort)
+      baudRate: Number(baudRate)
   });
 
   const serialPort = sPort.pipe(new Readline({

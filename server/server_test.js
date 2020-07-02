@@ -29,7 +29,7 @@ var serverADDR = functions.findMyIP();
 
 
 const serPort = config.server.serPort;
-const serBaud =  config.server.serBaud;
+const baudRate =  config.server.serBaud;
 const serverPort =  config.server.serverPort;
 const version =  config.server.version;
 var LogR = 0;
@@ -47,6 +47,7 @@ var PIDVal;
 var ArduSys = {};
 var temperature;
 
+console.log(serPort);
 functions.initSerial();
 
 eventEmitter.on('CMDecho', function(data) {
