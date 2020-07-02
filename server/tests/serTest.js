@@ -10,7 +10,7 @@ const serBaud = "38400"
 
 const SerialPort = require('serialport')
 const Readline = require('@serialport/parser-readline')
-const port = new SerialPort(String(SerialPort), { baudRate: Number(serBaud) })
+const port = new SerialPort(serPort, { baudRate: Number(serBaud) })
 
 
 const parser = new Readline()
