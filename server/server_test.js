@@ -126,7 +126,18 @@ http.listen(config.server.serverPort, function(){
   sPort.on('data', function(data, socket) {
     data = data.toString('utf8');
     //console.log(data.trim());
-    if (data.indexOf('T') !== -1) {
+    if (data.indexOf('TH') !== -1) {
+        TelemetryHeader = data.split(SEPARATOR);
+        var arrayLength = TelemetryHeader.length;
+        for (var i = 0; i < arrayLength; i++) {
+            Telemetry[TelemetryHeader[i]] = "N/A";
+            console.log(TelemetryHeader[i]);
+        }
+
+        THReceived = 1;
+        //eventEmitter.emit('log', data);
+    }
+    if ((data.indexOf('T') !== -1) AND THReceived) {
         var tokenData = data.split(SEPARATOR);
         var j = 0;
         console.log("------------------");
@@ -144,17 +155,7 @@ http.listen(config.server.serverPort, function(){
         }
     }
     //"TH" means we are receiving Telemetry Headers
-    if (data.indexOf('TH') !== -1) {
-        TelemetryHeader = data.split(SEPARATOR);
-        var arrayLength = TelemetryHeader.length;
-        for (var i = 0; i < arrayLength; i++) {
-            Telemetry[TelemetryHeader[i]] = "N/A";
-            console.log(TelemetryHeader[i]);
-        }
 
-        THReceived = 1;
-        //eventEmitter.emit('log', data);
-    }
 
 //Data from sPOrt
 });
