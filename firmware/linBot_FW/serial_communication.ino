@@ -276,6 +276,7 @@ void TelemetryTX()
            String(IMU_Readings.pitch) +  SEPARATOR +
            String(IMU_Readings.roll) +  SEPARATOR +
            String(IMU_Readings.heading) +  SEPARATOR +
+           String(info) +  SEPARATOR +
            String(LoopT);
     Serial.println(line);
 
