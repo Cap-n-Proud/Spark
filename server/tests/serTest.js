@@ -24,6 +24,9 @@ sPort.on('open',function() {
 sPort.on('data', function(data) {
   data = data.toString('utf8');
 console.log(data.trim());
-serialPort.write("SCMD sdsds");
-
+  setTimeout(function() {
+    serialPort.write("SCMD sdsds");
+    sPort.write("SCMD sdsds");
+console.log("===> Command sent");
+ }, 2000);
 });
