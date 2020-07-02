@@ -11,7 +11,7 @@ const serBaud = "115200"
 const com = require('serialport')
 const Readline = require('@serialport/parser-readline')
 const sPort = new com(serPort,{
-  baudRate: Number(serPort)
+  baudRate: Number(serBaud)
 });
 
 const serialPort = sPort.pipe(new Readline({ delimiter: '\r\n' }))
