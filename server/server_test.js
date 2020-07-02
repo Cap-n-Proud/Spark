@@ -134,6 +134,21 @@ http.listen(config.server.serverPort, function(){
         //    functions.addTelemetryRow(telemetryfilePath, TelemetryFN, TelemetryHeader, data, PIDHeader, PIDVal, SEPARATOR)
         }
     }
+    //"TH" means we are receiving Telemetry Headers
+    if (data.indexOf('TH') !== -1) {
+        TelemetryHeader = data.split(SEPARATOR);
+        var arrayLength = TelemetryHeader.length;
+        for (var i = 0; i < arrayLength; i++) {
+            Telemetry[TelemetryHeader[i]] = "N/A";
+            //console.log(TelemetryHeader[i]);
+        }
 
+        THReceived = 1;
+        //eventEmitter.emit('log', data);
+    }
+
+//Data from sPOrt
 });
+
+
 });
