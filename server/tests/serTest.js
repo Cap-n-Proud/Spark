@@ -5,7 +5,7 @@
 // * @alias module:serialport
 
 const serPort = "/dev/ttyACM0"
-const serBaud = "115200"
+const serBaud = "9600"
 
 
 const com = require('serialport')
@@ -22,3 +22,4 @@ sPort.on('open',function() {
 })
 
 sPort.on('data', console.log)
+serialPort.write("nknjknjkk");
