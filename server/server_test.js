@@ -121,7 +121,7 @@ http.listen(config.server.serverPort, function(){
     setTimeout(function() {
       sPort.write('READ RemoteInit\n\r');
       console.log("RemoteInit SENT");
-    }, 2000);
+    }, 5000);
 
   sPort.on('data', function(data, socket) {
     data = data.toString('utf8');
