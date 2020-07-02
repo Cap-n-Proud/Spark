@@ -28,10 +28,10 @@ require('./routes')(app);
 var serverADDR = functions.findMyIP();
 
 
-const serPort = server.serPort;
-const serBaud = server.serBaud;
-const serverPort = server.serverPort;
-const version = server.version;
+const serPort = config.server.serPort;
+const serBaud =  config.server.serBaud;
+const serverPort =  config.server.serverPort;
+const version =  config.server.version;
 var LogR = 0;
 var TelemetryFN = 'N/A';
 var prevTel = "";
