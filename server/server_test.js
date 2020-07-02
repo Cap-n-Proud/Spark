@@ -124,7 +124,7 @@ http.listen(config.server.serverPort, function(){
         for (var i in Telemetry) {
             Telemetry[i] = tokenData[j];
             j++;
-            console.log(Telemetry[i]);
+            //console.log(Telemetry[i]);
             //console.log(i + ' ' + Telemetry[i]);
         }
         j = 0;
