@@ -47,8 +47,7 @@ var PIDVal;
 var ArduSys = {};
 var temperature;
 
-
-eventEmitter.on('CMDecho', function(data) {
+functions.initSerial();).on('CMDecho', function(data) {
     socket.emit('CMD', data);
 });
 
