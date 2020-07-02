@@ -21,14 +21,14 @@ sPort.on('open',function() {
   console.log('Arduino connected on '+ serPort + ' @' + serBaud)
 })
 
-// sPort.on('data', function(data) {
-//   data = data.toString('utf8');
-// console.log(data.trim());
+ sPort.on('data', function(data) {
+   data = data.toString('utf8');
+ console.log(data.trim());
 //   setTimeout(function() {
 //     serialPort.write("SCMD sdsds");
 //     sPort.write("SCMD sdsds");
 // console.log("===> Command sent");
 //  }, 2000);
-//});
+});
 
-sPort.on('data', console.log.toString('utf8'))
+//sPort.on('data', console.log)
