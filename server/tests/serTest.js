@@ -22,7 +22,7 @@ port.pipe(parser)
 
 
 // Switches the port into "flowing mode"
-port.on('data', function (data) {
+parser.on('data', function (data) {
   console.log('Data:', data)
   setTimeout(function() {
     port.write("SCMD sdsds");
