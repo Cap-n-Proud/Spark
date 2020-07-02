@@ -24,6 +24,6 @@ sPort.on('open',function() {
 sPort.on('data', function(data) {
   data = data.toString('utf8');
 console.log(data);
-serialPort.write("nknjknjkk");
+sPort.write("nknjknjkk");
 
 });
