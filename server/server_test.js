@@ -20,7 +20,7 @@ var functions = require(__dirname + '/lib/functions');
 app.use(express.static('wwwroot'));
 require('./routes')(app);
 
-functions.initSer();
+functions.initSerial();
 
 //SysVars
 var serverADDR = functions.findMyIP();
