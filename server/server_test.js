@@ -1,6 +1,7 @@
 'use strict';
 
 const fs = require('fs');
+const eventEmitter = new events.EventEmitter();
 
 let rawdata = fs.readFileSync(__dirname + '/config.json');
 let config = JSON.parse(rawdata);
@@ -25,6 +26,11 @@ functions.initSerial();
 //SysVars
 var serverADDR = functions.findMyIP();
 
+
+const serPort = server.serPort;
+const serBaud = server.serBaud;
+const serverPort = server.serverPort;
+const version = server.version;
 var LogR = 0;
 var TelemetryFN = 'N/A';
 var prevTel = "";
