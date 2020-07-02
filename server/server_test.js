@@ -59,7 +59,7 @@ const sPort = new com(serPort, {
 const serialPort = sPort.pipe(new Readline({ delimiter: '\r\n' }))
 sPort.on('open', function() {
     console.log('Arduino connected on ' + serPort + ' @' + baudRate)
-    sport.write('READ RemoteInit\n\r');
+    sPort.write('READ RemoteInit\n\r');
 
 })
 //------------------------- END Setup serial port -------------------------//
@@ -122,7 +122,6 @@ http.listen(config.server.serverPort, function(){
     if (data.indexOf('T') !== -1) {
         var tokenData = data.split(SEPARATOR);
         var j = 0;
-        console.log("GOT T");
         for (var i in Telemetry) {
             Telemetry[i] = tokenData[j];
             j++;
