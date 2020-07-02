@@ -48,7 +48,17 @@ var ArduSys = {};
 var temperature;
 
 console.log(serPort);
-functions.initSerial();
+//Setup serial port
+const com = require('serialport')
+const Readline = require('@serialport/parser-readline')
+const sPort = new com(serPort, {
+    baudRate: Number(baudRate)
+});
+
+const serialPort = sPort.pipe(new Readline({ delimiter: '\r\n' }))
+sPort.on('open', function() {
+    console.log('Arduino connected on ' + serPort + ' @' + serBaud)
+})
 
 eventEmitter.on('CMDecho', function(data) {
     socket.emit('CMD', data);
