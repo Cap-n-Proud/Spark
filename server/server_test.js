@@ -117,7 +117,7 @@ http.listen(config.server.serverPort, function(){
   console.log('listening on: ' + serverADDR + ':'+ config.server.serverPort);
   //Read input from Arduino and stores it into a dictionary
 
-
+//TO-DO Arduino should send a signat whrn ready to renasmit and all systems are nintialized
     setTimeout(function() {
       sPort.write('READ RemoteInit\n\r');
       console.log("RemoteInit SENT");
@@ -125,7 +125,7 @@ http.listen(config.server.serverPort, function(){
 
   sPort.on('data', function(data, socket) {
     data = data.toString('utf8');
-    console.log(data.trim());
+    //console.log(data.trim());
     if (data.indexOf('T') !== -1) {
         var tokenData = data.split(SEPARATOR);
         var j = 0;
