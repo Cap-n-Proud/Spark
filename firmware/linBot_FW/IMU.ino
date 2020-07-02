@@ -1,5 +1,5 @@
 
- //https://github.com/jrowberg/i2cdevlib
+//https://github.com/jrowberg/i2cdevlib
 #include <Wire.h>
 #include <HMC5883L.h>
 //#include <MPU6050.h>
@@ -49,14 +49,18 @@ void dmpDataReady() {
 
 void initIMU()
 {
-  #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
-Wire.begin();
-  #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
-        Fastwire::setup(400, true);
-  #endif
+#if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
+  Wire.begin();
+#elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
+  Fastwire::setup(400, true);
+#endif
+  // initialize device
+  Serial.println(F("Initializing I2C devices..."));
+  sendI("Initializing I2C devices...");
 
-   // load and configure the DMP
+  // load and configure the DMP
   Serial.println(F("Initializing DMP..."));
+  sendI("Initializing DMP...");
   devStatus = mpu.dmpInitialize();
 
   // Enable bypass mode
@@ -66,34 +70,35 @@ Wire.begin();
 
   // Initialize HMC5883L
   compass.initialize();
-  
+
   Serial.println("Testing device connections...");
-    Serial.println(compass.testConnection() ? "HMC5883L connection successful" : "HMC5883L connection failed");
+  sendI("Testing device connections...");
+
+  Serial.println(compass.testConnection() ? "HMC5883L connection successful" : "HMC5883L connection failed");
+  (compass.testConnection() ? sendI("HMC5883L connection successful") : sendE("HMC5883L connection failed"));
 
 
-  // initialize device
-  Serial.println(F("Initializing I2C devices..."));
- //devStatus = mpu.initialize();
   pinMode(INTERRUPT_PIN, INPUT);
 
   // verify connection
   Serial.println(F("Testing device connections..."));
   Serial.println(mpu.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
+  (mpu.testConnection() ? sendI(F("MPU6050 connection successful")) : sendE(F("MPU6050 connection failed")));
 
   // wait for ready
-//  Serial.println(F("\nSend any character to begin DMP programming and demo: "));
-//  while (Serial.available() && Serial.read()); // empty buffer
-//  while (!Serial.available());                 // wait for data
-//  while (Serial.available() && Serial.read()); // empty buffer again
+  //  Serial.println(F("\nSend any character to begin DMP programming and demo: "));
+  //  while (Serial.available() && Serial.read()); // empty buffer
+  //  while (!Serial.available());                 // wait for data
+  //  while (Serial.available() && Serial.read()); // empty buffer again
 
 
   // supply your own gyro offsets here, scaled for min sensitivity
-  mpu.setXGyroOffset(51);
-  mpu.setYGyroOffset(8);
-  mpu.setZGyroOffset(21);
-  mpu.setXAccelOffset(1150);
-  mpu.setYAccelOffset(-50);
-  mpu.setZAccelOffset(1060);
+  mpu.setXGyroOffset(119);
+  mpu.setYGyroOffset(-46);
+  mpu.setZGyroOffset(23);
+  mpu.setXAccelOffset(-1096);
+  mpu.setYAccelOffset(1312);
+  mpu.setZAccelOffset(1394);
   // make sure it worked (returns 0 if so)
   if (devStatus == 0) {
     // Calibration Time: generate offsets and calibrate our MPU6050
@@ -104,6 +109,7 @@ Wire.begin();
     // turn on the DMP, now that it's ready
     Serial.println(F("Enabling DMP..."));
     mpu.setDMPEnabled(true);
+    sendI("Enabling DMP...");
 
     // enable Arduino interrupt detection
     Serial.print(F("Enabling interrupt detection (Arduino external interrupt "));
@@ -114,6 +120,7 @@ Wire.begin();
 
     // set our DMP Ready flag so the main loop() function knows it's okay to use it
     Serial.println(F("DMP ready! Waiting for first interrupt..."));
+    sendI(F("DMP ready! Waiting for first interrupt..."));
     dmpReady = true;
 
     // get expected DMP packet size for later comparison
@@ -124,6 +131,7 @@ Wire.begin();
     // 2 = DMP configuration updates failed
     // (if it's going to break, usually the code will be 1)
     Serial.print(F("DMP Initialization failed (code "));
+    sendE(F("DMP Initialization failed (code "));
     Serial.print(devStatus);
     Serial.println(F(")"));
   }
@@ -134,16 +142,16 @@ Wire.begin();
 void ReadIMU(IMU_data &IMU)
 {
   long x = micros();
- compass.getHeading(&mx, &my, &mz); // display tab-separated gyro x/y/z values
-   float heading = atan2(my, mx);
-    if(heading < 0)
-      heading += 2 * M_PI;
-    
-    IMU.heading = (heading * 180/M_PI);
-    // if programming failed, don't try to do anything
+  compass.getHeading(&mx, &my, &mz); // display tab-separated gyro x/y/z values
+  float heading = atan2(my, mx);
+  if (heading < 0)
+    heading += 2 * M_PI;
+
+  IMU.heading = (heading * 180 / M_PI);
+  // if programming failed, don't try to do anything
   if (!dmpReady) return;
   // read a packet from FIFO
-  if (mpu.dmpGetCurrentFIFOPacket(fifoBuffer)) { // Get the Latest packet 
+  if (mpu.dmpGetCurrentFIFOPacket(fifoBuffer)) { // Get the Latest packet
 
 
 
@@ -152,11 +160,11 @@ void ReadIMU(IMU_data &IMU)
     mpu.dmpGetQuaternion(&q, fifoBuffer);
     mpu.dmpGetGravity(&gravity, &q);
     mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
-   IMU.yaw = ypr[0] * 180 / M_PI;
-   IMU.pitch = ypr[1] * 180 / M_PI;
-   IMU.roll = ypr[2] * 180 / M_PI;
+    IMU.yaw = ypr[0] * 180 / M_PI;
+    IMU.pitch = ypr[1] * 180 / M_PI;
+    IMU.roll = ypr[2] * 180 / M_PI;
 #endif
 
   }
-    
+
 }

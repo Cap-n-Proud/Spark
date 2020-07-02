@@ -3,6 +3,14 @@
 
 int TxLoopTime;
 
+// Commands: READ => Reads value, defaults etc
+// SCMD: Set commands
+
+
+//T: Telemetry
+//E: Error
+//I: Information
+//
 
 void RemoteInit()
 {
@@ -17,7 +25,7 @@ void RemoteInit()
             "pitch" + SEPARATOR +
             "roll" + SEPARATOR +
             "heading" + SEPARATOR +
-            "alt" + SEPARATOR +
+            "info" + SEPARATOR +
             "LoopT";
 
   Serial.println(headers);/*
@@ -53,7 +61,7 @@ void setCommand()
   value2 = SCmd.next();
 
   //This echoes the command back to confirm it is received correctely
-  String cmd = String("SCMD " + String(arg) + " " + String(value));
+  String cmd = String("SCMD " + String(arg) + " " + String(value) + " " + String(value2));
   Serial.println(cmd);
 
   if (value != NULL)
@@ -227,22 +235,22 @@ void printCommand() {
     Serial.println("Configuration");
     Serial.println("--------------------------------------------------");
     Serial.print("FirmwareVersion "); Serial.println(configuration.FirmwareVersion);
-   Serial.print("Rin1Pin "); Serial.println(configuration.Rin1Pin);
-   Serial.print("Rin2Pin "); Serial.println(configuration.Rin2Pin);
-   Serial.print("Rin3Pin "); Serial.println(configuration.Rin3Pin);
-   Serial.print("Rin4Pin "); Serial.println(configuration.Rin4Pin);
-   Serial.print("Lin1Pin "); Serial.println(configuration.Lin1Pin );
-   Serial.print("Lin2Pin "); Serial.println(configuration.Lin2Pin );
-   Serial.print("Lin3Pin "); Serial.println(configuration.Lin3Pin );
-   Serial.print("Lin4Pin "); Serial.println(configuration.Lin4Pin );
-   Serial.print("stepsPerRev "); Serial.println(configuration.stepsPerRev);
-   Serial.print("maxSpeed "); Serial.println(configuration.maxSpeed);
-   Serial.print("maxAcc "); Serial.println(configuration.maxAcc);
-   Serial.print("steerGain "); Serial.println(configuration.steerGain);
-   Serial.print("throttleGain "); Serial.println(configuration.throttleGain);
-   Serial.print("Maxsteer "); Serial.println(configuration.Maxsteer);
-   Serial.print("Maxthrottle "); Serial.println(configuration.Maxthrottle);
-  
+    Serial.print("Rin1Pin "); Serial.println(configuration.Rin1Pin);
+    Serial.print("Rin2Pin "); Serial.println(configuration.Rin2Pin);
+    Serial.print("Rin3Pin "); Serial.println(configuration.Rin3Pin);
+    Serial.print("Rin4Pin "); Serial.println(configuration.Rin4Pin);
+    Serial.print("Lin1Pin "); Serial.println(configuration.Lin1Pin );
+    Serial.print("Lin2Pin "); Serial.println(configuration.Lin2Pin );
+    Serial.print("Lin3Pin "); Serial.println(configuration.Lin3Pin );
+    Serial.print("Lin4Pin "); Serial.println(configuration.Lin4Pin );
+    Serial.print("stepsPerRev "); Serial.println(configuration.stepsPerRev);
+    Serial.print("maxSpeed "); Serial.println(configuration.maxSpeed);
+    Serial.print("maxAcc "); Serial.println(configuration.maxAcc);
+    Serial.print("steerGain "); Serial.println(configuration.steerGain);
+    Serial.print("throttleGain "); Serial.println(configuration.throttleGain);
+    Serial.print("Maxsteer "); Serial.println(configuration.Maxsteer);
+    Serial.print("Maxthrottle "); Serial.println(configuration.Maxthrottle);
+
     //ADD HERE OTHER PARAMETERS
     Serial.println("--------------------------------------------------");
 
@@ -255,33 +263,28 @@ void printCommand() {
 void TelemetryTX()
 { // for help on dtostrf http://forum.arduino.cc/index.php?topic=85523.0
 
- String line = "";
-  String line2 = "";
+  String line = "";
+  String info = "info";
   if (!configuration.debug) {
     String telemMarker = "T";
     //Need to calculate parameters here because the main loop has a different frequency
     //TxLoopTime = millis() - TxLoopTime;
 
- 
+
     line = telemMarker + SEPARATOR +
-            String(IMU_Readings.yaw) +  SEPARATOR +
-            String(IMU_Readings.pitch) +  SEPARATOR +
-            String(IMU_Readings.roll) +  SEPARATOR +
-            String(IMU_Readings.heading) +  SEPARATOR +
-            String(LoopT) +  SEPARATOR +
-                  F("test") + SEPARATOR;
+           String(IMU_Readings.yaw) +  SEPARATOR +
+           String(IMU_Readings.pitch) +  SEPARATOR +
+           String(IMU_Readings.roll) +  SEPARATOR +
+           String(IMU_Readings.heading) +  SEPARATOR +
+           String(LoopT);
     Serial.println(line);
 
     /*line = "T" + SEPARATOR
            + yaw + SEPARATOR
            + pitch + SEPARATOR
            + roll + SEPARATOR
-           + pitchd1 + SEPARATOR
-           + dISTEKalmanFiltered + SEPARATOR
-           //+ anglePIDOutput + SEPARATOR
-           + leftMotorSpeed + SEPARATOR
-           + rightMotorSpeed + SEPARATOR
-           + LoopT;
+           + heading + SEPARATOR
+           + Info
       //+ SEPARATOR
       //+ LastEvent;*/
     //Serial.println(line);
@@ -313,3 +316,28 @@ void TelemetryTX()
   }
 
   }*/
+
+void sendE(const String& E) {
+  String line = "";
+  String info = "info";
+  if (!configuration.debug) {
+    String errorMarker = "E";
+    line = errorMarker + SEPARATOR +
+           String("ERROR") +  SEPARATOR +
+           String(E);
+    Serial.println(line);
+
+  }
+}
+
+void sendI(const String& I) {
+  String line = "";
+  if (!configuration.debug) {
+    String infoMarker = "I";
+    line = infoMarker + SEPARATOR +
+           String("INFO") +  SEPARATOR +
+           String(I);
+    Serial.println(line);
+
+  }
+}

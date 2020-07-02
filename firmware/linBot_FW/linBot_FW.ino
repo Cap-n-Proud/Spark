@@ -29,6 +29,8 @@
 #define speedMultiplier 1
 #define SERIAL_BAUD 115200
 #define CONFIG_START 32 //EEPROM address to start the config
+#define OUTPUT_REMOTE
+#define OUTPUT_SERIAL_MONITOR
 
 
 /* Configutation parameters */
@@ -147,7 +149,7 @@ void setConfiguration(boolean force) {
 
 
 String SEPARATOR = ","; //Used as separator for telemetry
-
+String infoLine, errorLine;
 
 int StartL, LoopT;
 int prevSpeedL = 0;
@@ -185,13 +187,14 @@ TimedAction TelemetryTXTimedAction = TimedAction(250, TelemetryTX);
 
 //------------------ Setup ------------------
 void setup() {
-    StartL = millis();
+  StartL = millis();
 
   //pinMode(configuration.speakerPin, OUTPUT);
 
   Serial.begin(SERIAL_BAUD);
   delay(50);
   Serial.println("Initializing ...");
+  sendI("Initializing ...");
   // Load config from eeprom
   setConfiguration(false);
   // init i2c and IMU
@@ -208,8 +211,20 @@ void setup() {
   // Setup callbacks for SerialCommand commands
   SCmd.addCommand("SCMD", setCommand);
   SCmd.addCommand("READ", printCommand);
-     LoopT = millis() - StartL;
- Serial.print("...all done ");Serial.print(LoopT);Serial.println(" ms");
+  LoopT = millis() - StartL;
+
+#ifdef OUTPUT_SERIAL_MONITOR
+  Serial.print("...all done "); Serial.print(LoopT); Serial.println(" ms");
+
+
+#endif
+#ifdef OUTPUT_REMOTE
+
+  infoLine = "... all done in " + String(LoopT) + " ms";
+  sendI(infoLine);
+
+#endif
+
 
 }
 
@@ -225,12 +240,12 @@ void loop() {
   //Read remote commands
   RemoteReadTimedAction.check();
 
- 
+
   //===> This crashes teh arduino
   updateMotorSpeedTimedAction.check();
   //updateMotorSpeeds(UserControl[0], UserControl[1]);
   ReadIMU(IMU_Readings);
-   //Trasmit telemetry
+  //Trasmit telemetry
   TelemetryTXTimedAction.check();
 
   LoopT = millis() - StartL;
