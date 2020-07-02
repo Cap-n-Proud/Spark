@@ -31,6 +31,6 @@ sPort.on('open',function() {
 //     sPort.write("SCMD sdsds");
 // console.log("===> Command sent");
 //  }, 2000);
-});
+
 
 //sPort.on('data', console.log)
