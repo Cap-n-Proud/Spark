@@ -40,7 +40,7 @@
   <div class="medium-3 columns"><span id="heading">N/A</span></div>
 </div>
 <div class="row">
-   <div class="medium-6 columns"><i class="fa fa-info-circle"></i>&nbsp;<span id="info">Info</span></div>
+   <div class="medium-6 columns"><i class="fa fa-info-circle"></i>&nbsp;<span id="I">Info</span></div>
    <div class="medium-6 columns"> <i class="fa fa-terminal"></i>&nbsp;<span id="CMDEcho">last command</span></div>
  </div>
 
@@ -193,6 +193,10 @@
 
                 socket.on('cpuUsageUpdate', function (CPU) {
                 document.getElementById("CPU").innerHTML = CPU;
+                });
+
+                socket.on('I', function (info) {
+                  document.getElementById("I").innerHTML = info.toString();
                 });
 
 

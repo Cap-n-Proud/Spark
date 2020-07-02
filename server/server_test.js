@@ -81,6 +81,9 @@ io.on('connection', function(socket){
   eventEmitter.on('CMDEcho', function(data) {
       socket.emit('CMDEcho', data);
   });
+  eventEmitter.on('I', function(data) {
+      socket.emit('I', data);
+  });
 
   eventEmitter.on('serialData', function(data) {
       socket.emit('serialData', data);
@@ -110,7 +113,7 @@ io.on('connection', function(socket){
 
   socket.on('move', function(dX, dY) {
       port.write('SCMD move ' + Math.round(dX) + ' ' + Math.round(dY) + '\n');
-      console.log('SCMD move ' + Math.round(dX) + ' ' + Math.round(dY));
+    //  console.log('SCMD move ' + Math.round(dX) + ' ' + Math.round(dY));
 
   });
 
@@ -129,9 +132,19 @@ port.write('READ RemoteInit\n\r');
 //console.log("===>READ RemoteInit");
 }, 4000);
 parser.on('data', function(data, socket) {
+  //console.log(data);
   if (data.indexOf('CMDEcho') !== -1) {
-      eventEmitter.emit('CMDEcho', data);
+    var keyw ="CMDEcho";
+    //Remove the first word
+    eventEmitter.emit('CMDEcho', data.substring(keyw.length, data.length));
   }
+
+
+  if (data.indexOf('I') !== -1) {
+        console.log(data);
+        var keyw ="I,INFO,";
+        eventEmitter.emit('I', data.substring(keyw.length, data.length));
+      }
 
 if (data.indexOf('TH') !== -1) {
         TelemetryHeader = data.split(SEPARATOR);
