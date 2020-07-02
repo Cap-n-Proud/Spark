@@ -121,7 +121,7 @@ http.listen(config.server.serverPort, function(){
     setTimeout(function() {
       sPort.write('READ RemoteInit\n\r');
       console.log("RemoteInit SENT");
-    }, 5000);
+    }, 7000);
 
   sPort.on('data', function(data, socket) {
     data = data.toString('utf8');
@@ -149,7 +149,7 @@ http.listen(config.server.serverPort, function(){
         var arrayLength = TelemetryHeader.length;
         for (var i = 0; i < arrayLength; i++) {
             Telemetry[TelemetryHeader[i]] = "N/A";
-            //console.log(TelemetryHeader[i]);
+            console.log(TelemetryHeader[i]);
         }
 
         THReceived = 1;
