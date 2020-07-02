@@ -118,7 +118,7 @@ http.listen(config.server.serverPort, function(){
 
 //TO-DO Arduino should send a signat whrn ready to renasmit and all systems are nintialized
 
-  serialPort.write('READ RemoteInit\n\r');
+  //serialPort.write('READ RemoteInit\n\r');
   sPort.write('READ RemoteInit\n\r');
 sPort.on('data', function(data, socket) {
     data = data.toString('utf8');
