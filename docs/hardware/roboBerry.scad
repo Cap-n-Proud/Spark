@@ -53,8 +53,6 @@ module SUB_screwM(diam, lenght, tolerance) {
     translate([0, 0, -3]) cylinder(r = diam + tolerance, h = 3.5, $fn = FN);
 }
 
-
-
 module caster(casterD) {
     //Creates the caster rounded with Minkowski transformation
     difference() {
@@ -74,10 +72,18 @@ module caster(casterD) {
     }
 }
 
+module frontTopHoles(){
+ for (y = [0: 2 * optHoleD: 10]) {
+                for (x = [0: 2 * optHoleD: baseY - 48]) {
+                    translate([baseX / 2 + 5 + y, +baseY / 2 - 25 - x, 0]) {
+                        adjustablengHole(optHoleD, optHoleD);
 
-
+                    }
+                }
+            }
+        }
 module SUB_base() {
-    //This creates the shell and holes, we just need to add the sockets fo rthe stepper motors
+    //This creates the shell and holes, we just need to add the sockets for the stepper motors
     union() {
 
         difference() {
@@ -92,14 +98,7 @@ module SUB_base() {
             translate([baseX / 2, 0, -baseZ / 2 + baseThickness / 2])
             SUB_front();
             //Top
-            for (y = [0: 2 * optHoleD: 10]) {
-                for (x = [0: 2 * optHoleD: baseY - 48]) {
-                    translate([baseX / 2 + 5 + y, +baseY / 2 - 25 - x, 0]) {
-                        adjustablengHole(optHoleD, optHoleD);
-
-                    }
-                }
-            }
+           frontTopHoles();
             frontHoles();
             sidefrontHoles();
             mirror([0, 1, 0]) sidefrontHoles();
@@ -109,7 +108,6 @@ module SUB_base() {
 
     }
 }
-
 
 module frontHoles() {
     //Front
@@ -240,7 +238,7 @@ module casterSupports() {
 }
 
 module nema17(L, negative, T) {
-    //If called with "negative =Y" it will generate a shape to be used with difference() to create a support fo rthe motor. Tolerances for shaft and mounting holes are adjusted accrgingly
+    //If called with "negative =Y" it will generate a shape to be used with difference() to create a support fo rthe motor. Tolerances for shaft and mounting holes are adjusted accorgingly
     cylinder(r = (5 * (1 + T)) / 2, h = 24, center = false);
     translate([0, 0, 24]) cylinder(r = 22 / 2, h = 2, center = false);
 
@@ -306,6 +304,30 @@ module PI_holes(){
         translate([PI_hole1_DX / 2, -PI_hole1_DY / 2, 0]) rotate([0, 0, 0]) SUB_screwM(3, 2 * baseZ, -0.3);
     
 }
+
+//Converted from here: https://www.wayneandlayne.com/blog/2010/12/19/nice-drawings-of-the-arduino-uno-and-mega-2560/
+// 1 mils = 0.0254 mm
+Arduino_Hole1=0.0254*[550,100];
+Arduino_Hole2=0.0254*[2600, 300];
+Arduino_Hole3=0.0254*[3800,100];
+Arduino_Hole4=0.0254*[3550, 2000];
+Arduino_Hole5=0.0254*[2600,1400];
+Arduino_Hole6=0.0254*[600,2000];
+Arduino_offset=[PCBbaseX,2100/2*0.0254, 0];
+
+//echo(Arduino_Hole1-Arduino_offset);
+
+module Arduino_holes(){
+    
+    translate(Arduino_Hole1-Arduino_offset, 0) rotate([0, 0, 0]) SUB_screwM(3, 2 * baseZ, -0.3);
+        translate(Arduino_Hole2-Arduino_offset) rotate([0, 0, 0]) SUB_screwM(3, 2 * baseZ, -0.3);
+        translate(Arduino_Hole3-Arduino_offset) rotate([0, 0, 0]) SUB_screwM(3, 2 * baseZ, -0.3);
+        translate(Arduino_Hole4-Arduino_offset) rotate([0, 0, 0]) SUB_screwM(3, 2 * baseZ, -0.3);     
+    translate(Arduino_Hole5-Arduino_offset) rotate([0, 0, 0]) SUB_screwM(3, 2 * baseZ, -0.3);
+         translate(Arduino_Hole6-Arduino_offset) rotate([0, 0, 0]) SUB_screwM(3, 2 * baseZ, -0.3);
+    
+}
+
 module supportPCB_firstLevel() {
     difference() {
         minkowski() {
@@ -328,13 +350,38 @@ PI_holes();
 }
 
 
+
+module supportPCB_secondLevel() {
+    difference() {
+        minkowski() {
+            cube([PCBbaseX, PCBbaseY, PCBbaseZ], center = true);
+            sphere(2);
+        }
+        //Drill pillars holes for stacking
+        translate([PCBbaseX / 2 - pillar_margin, PCBbaseY / 2 - pillar_margin, 0]) SUB_screwM(3, 2 * baseZ, -0.3);
+        translate([PCBbaseX / 2 - pillar_margin, -PCBbaseY / 2 + pillar_margin, 0]) SUB_screwM(3, 2 * baseZ, -0.3);
+        translate([-PCBbaseX / 2 + pillar_margin, PCBbaseY / 2 - pillar_margin, 0]) SUB_screwM(3, 2 * baseZ, -0.3);
+        translate([-PCBbaseX / 2 + pillar_margin, -PCBbaseY / 2 + pillar_margin, 0]) SUB_screwM(3, 2 * baseZ, -0.3);
+
+rotate([0,0,90])Arduino_holes();
+
+        
+        
+        
+        
+   //Difference     
+    }
+}
+
+
 /*
 translate([baseX/2-30,baseY/2,-frontWheelZ])rotate([90,0,0])cylinder(r=frontWheelD/2,5);
 translate([-baseX/2,baseY/2,-casterPillarZ])rotate([90,0,0])caster(casterD);
 */
 
 //caster(casterD);
-//casterSupports();
+translate([-baseX/2,0-,-casterPillarZ/2])rotate([0,0,0])casterSupports();
 //nema17(32.84,"N",1);
-//base();
-supportPCB_firstLevel();
+base();
+//supportPCB_secondLevel();
+//translate([0,0,-casterPillarZ])supportPCB_firstLevel();
