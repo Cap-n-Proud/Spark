@@ -1,21 +1,63 @@
 <!doctype html>
-<html class="no-js" lang="en">
+<html  lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Foundation Starter Template</title>
-    <link rel="stylesheet" href="css/foundation.css" />
+<style>
+@breakpoint: 1500px;
+
+/* Responsive
+==================================== */
+@media all and (max-width: @breakpoint) {
+  .Rtable--collapse  {
+    display: block;
+    > .Rtable-cell { width: 100% !important; }
+    > .Rtable-cell--foot { margin-bottom: 1em; }
+  }
+}
+
+// Non-Flex modernizer fallback
+.no-flexbox .Rtable {
+  display: block;
+  > .Rtable-cell { width: 100%; }
+  > .Rtable-cell--foot { margin-bottom: 1em; }
+}
+
+
+</style>
   </head>
   <body>
     <h1>Hello, world!</h1>
 
-    <script src="js/vendor/jquery.js"></script>
-    <script src="js/vendor/what-input.js"></script>
-    <script src="www_static/foundation-sites/dist/js/foundation.min.js"></script>
-    <script>
-      $(document).foundation();
-    </script>
+    <h2>Responsive collapse (by column)</h2>
+    <div class="Rtable Rtable--2cols Rtable--collapse">
+
+      <div style="order:0;" class="Rtable-cell Rtable-cell--head"><h3>Eddard Stark</h3></div>
+      <div style="order:1;" class="Rtable-cell">Has a sword named Ice</div>
+      <div style="order:2;" class="Rtable-cell">No direwolf</div>
+      <div style="order:3;" class="Rtable-cell Rtable-cell--foot"><strong>Lord of Winterfell</strong></div>
+
+      <div style="order:0;" class="Rtable-cell Rtable-cell--head"><h3>Jon Snow</h3></div>
+      <div style="order:1;" class="Rtable-cell">Has a sword named Longclaw</div>
+      <div style="order:2;" class="Rtable-cell">Direwolf: Ghost</div>
+      <div style="order:3;" class="Rtable-cell Rtable-cell--foot"><strong>Knows nothing</strong></div>
+
+    </div>
+
+    <h2>Responsive collapse (by row)</h2>
+    <div class="Rtable Rtable--4cols Rtable--collapse">
+
+      <div class="Rtable-cell Rtable-cell--head"><h3>Eddard Stark</h3></div>
+      <div class="Rtable-cell">Has a sword named Ice</div>
+      <div class="Rtable-cell">No direwolf</div>
+      <div class="Rtable-cell Rtable-cell--foot"><strong>Lord of Winterfell</strong></div>
+
+      <div class="Rtable-cell Rtable-cell--head"><h3>Jon Snow</h3></div>
+      <div class="Rtable-cell">Has a sword named Longclaw</div>
+      <div class="Rtable-cell">Direwolf: Ghost</div>
+      <div class="Rtable-cell Rtable-cell--foot"><strong>Knows nothing</strong></div>
+
+    </div>
 
   </body>
 </html>

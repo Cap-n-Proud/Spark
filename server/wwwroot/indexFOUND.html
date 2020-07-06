@@ -24,57 +24,46 @@
 
      <div id="mySidebar" class="sidebar">
        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-       <table>
+       <table class="NA" style="background-color: transparent">
          <tr>
            <td> <i class="fa fa-bolt fa-2x"></i></td>
            <td><label class="switch2"><input type="checkbox" id="Motors" onclick="MotorF(this)"><span class="slider2 round"></span></label></td>
          </tr>
 
          <tr>
-           <td><i class="fa fa-arrows fa-2x"></i></td>
-           <td><label class="switch2"><i class="fa fa-arrows fa-2x"></i><input id="Video" type="checkbox" onclick="VideoF(this)"><span class="slider2 round"></span></label></td>
+           <td>Jill</td>
+           <td>Smith</td>
          </tr>
 
          <tr>
-           <td><i class="fa fa-arrows fa-2x"></i></td>
-           <td><label class="switch2"><i class="fa fa-video-camera fa-2x"></i><input id="Log" type="checkbox" onclick="LogF(this)"><span class="slider2 round"></span></label></td>
+           <td>Jill</td>
+           <td>Smith</td>
          </tr>
 
          <tr>
-           <td><i class="fa fa-arrows fa-2x"></i></td>
-           <td><label class="switch2"><i class="fa fa-line-chart fa-2x"></i><input id="tGPH" type="checkbox" onclick="toggleTelemetryGPH(this)"></span></label></td>
+           <td>Jill</td>
+           <td>Smith</td>
          </tr>
 
          <tr>
-           <td><i class="fa fa-arrows fa-2x"></i></td>
-           <td><label class="switch2"><i class="fa fa-bolt fa-2x"></i><input id="Motors" type="checkbox" onclick="MotorF(this)"></span></label></td>
+           <td>Jill</td>
+           <td>Smith</td>
          </tr>
-         <tr>
-           <td></td>
-           <td></td>
-         </tr>
-
 
 
 </table>
- <button onclick="shutdown()" class="button danger button3"><i class="fa fa-power-off"></i></button>
+
+       <i class="fa fa-arrows fa-2x"></i><label class="switch2"><i class="fa fa-arrows fa-2x"></i><input id="Video" type="checkbox" onclick="VideoF(this)"><span class="slider2 round"></span></label>
+       <i class="fa fa-arrows fa-2x"></i><label class="switch2"><i class="fa fa-video-camera fa-2x"></i><input id="Log" type="checkbox" onclick="LogF(this)"><span class="slider2 round"></span></label>
+       <i class="fa fa-arrows fa-2x"></i><label class="switch2"><i class="fa fa-line-chart fa-2x"></i><input id="tGPH" type="checkbox" onclick="toggleTelemetryGPH(this)"></span></label>
+       <i class="fa fa-arrows fa-2x"></i><label class="switch2"><i class="fa fa-bolt fa-2x"></i><input id="Motors" type="checkbox" onclick="MotorF(this)"></span></label>
+       <!-- <i class="fa fa-arrows fa-2x"></i><label class="switch2"><input type="checkbox"><span class="slider2 round"></span></label> -->
+       <a href="#" onclick="shutdown()" class="alert button round" style="color:red;> <i class="fa fa-power-off"></i></a>
 
      </div>
      <!-- Main body right of the sidebar -->
      <div id="main">
        <button class="openbtn" onclick="openNav()">☰ Open Sidebar</button>
-
-<!-- https://css-tricks.com/accessible-simple-responsive-tables/ -->
-
-<div class="Rtable Rtable--3cols Rtable--collapse">
-
-  <div class="Rtable-cell">
-    <h3>Eddard Stark</h3>
-  </div>
-  <div class="Rtable-cell">Has a sword named Ice</div>
-  <div class="Rtable-cell">No direwolf</div>
-
-</div>
 
      <div class="row">
    <div class="medium-6 columns">
@@ -111,7 +100,6 @@
    <div class="medium-2 columns"></div>
 </div>
 
-<!-- END of main body div -->
 </div>
       <script>
 
