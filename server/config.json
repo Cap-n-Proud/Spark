@@ -1,6 +1,6 @@
 {
   "server": {
-    "name": "ubuntuBot",
+    "name": "spark",
     "serverPort": 54321,
     "serBaud": 38400,
     "serPort": "/dev/ttyACM0",
