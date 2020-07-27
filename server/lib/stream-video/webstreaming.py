@@ -27,7 +27,7 @@ p = pathlib.Path(__file__).parent.absolute()
 print(str(p.parent.parent) + '/config.json')
 
 # parse x:
-config = json.loads(str(p.parent.parent) + '/config.json')
+config = json.loads(str(str(p.parent.parent) + '/config.json'))
 print(config['video']['FPS'])
 # standard Python
 sio = socketio.Client()
