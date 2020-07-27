@@ -97,12 +97,12 @@ def drawCompass(im, videoWidth, videoHeight, heading):
 	minI = 0
 	maxI = 360
 	compassRange = maxI-minI
-	for i in range(minI, maxI):
-		if i%20==0:
-			cv2.line(im, (reduce(i+heading,compassRange)+minI, - screenMargin), (reduce(i+heading,compassRange)+minI, + screenMargin + 10), (hudColorR,hudColorG,hudColorB))
-		if i%10==0:
-			cv2.line(im, (reduce(i+heading,compassRange)+minI, - screenMargin), (reduce(i+heading,compassRange)+minI, + screenMargin + 5), (hudColorR,hudColorG,hudColorB))
-
+	# for i in range(minI, maxI):
+	# 	if i%20==0:
+	# 		cv2.line(im, (reduce(i+heading,compassRange)+minI, - screenMargin), (reduce(i+heading,compassRange)+minI, + screenMargin + 10), (hudColorR,hudColorG,hudColorB))
+	# 	if i%10==0:
+	# 		cv2.line(im, (reduce(i+heading,compassRange)+minI, - screenMargin), (reduce(i+heading,compassRange)+minI, + screenMargin + 5), (hudColorR,hudColorG,hudColorB))
+	#
 		#test
         # if (i == map(0,0,360,minI, maxI))
         #     im.putText("N", new cv.Point(reduce(i+heading+videoWidth/2,compassRange)+minI, 25), fontFace, 0.7*fontSize, new cv.Vec(onScreenColorR, onScreenColorG, onScreenColorB));
