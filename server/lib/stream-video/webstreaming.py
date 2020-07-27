@@ -109,11 +109,11 @@ def drawCompass(im, videoWidth, videoHeight, heading):
 
 		if (i == map(0,0,360,minI, maxI)):
 			cv2.putText(im, "N", (reduce(i+heading+videoWidth//2,compassRange)+minI, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (onScreenColorR, onScreenColorG, onScreenColorB))
-		if (i == map(270,0,360,minI, maxI))
+		if (i == map(270,0,360,minI, maxI)):
 			cv2.putText("E", (reduce(i+heading+videoWidth/2,compassRange)+minI, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (onScreenColorR, onScreenColorG, onScreenColorB))
-		if (i == map(180,0,360,minI, maxI))
+		if (i == map(180,0,360,minI, maxI)):
 			cv2.line("S", new cv.Point(reduce(i+heading+videoWidth/2,compassRange)+minI, 25), fontFace, 0.7*fontSize, new cv.Vec(onScreenColorR, onScreenColorG, onScreenColorB))
-		if (i == map(90,0,360,minI, maxI))
+		if (i == map(90,0,360,minI, maxI)):
 			cv2.line("W", new cv.Point(reduce(i+heading+videoWidth/2,compassRange)+minI, 25), fontFace, 0.7*fontSize, new cv.Vec(onScreenColorR, onScreenColorG, onScreenColorB))
         # drawHeading(im, videoWidth, videoHeight, heading);
 
