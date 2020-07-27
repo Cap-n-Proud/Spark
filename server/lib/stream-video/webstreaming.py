@@ -43,7 +43,7 @@ def index():
 def detect_motion(frameCount):
 	# grab global references to the video stream, output frame, and
 	# lock variables
-	global vs, outputFrame, lock, headingV
+	global vs, outputFrame, lock
 	headingV = 0
 	# initialize the motion detector and the total number of frames
 	# read thus far
@@ -57,7 +57,7 @@ def detect_motion(frameCount):
 			print(yprh[3])
 	# loop over frames from the video stream
 	while True:
-		print(headingV)
+		print(yprh[3])
 		start_time = time.time()
 		# read the next frame from the video stream, resize it,
 		# convert the frame to grayscale, and blur it
