@@ -64,7 +64,7 @@ app = Flask(__name__)
 # initialize the video stream and allow the camera sensor to
 # warmup
 #vs = VideoStream(usePiCamera=1).start()
-vs = VideoStream(src=0,resolution=(320,240)).start()
+vs = VideoStream(src=0,resolution=(videoWidth,videoHeight)).start()
 time.sleep(2.0)
 
 @app.route("/")
@@ -101,7 +101,7 @@ def detect_motion(frameCount):
 		# read the next frame from the video stream, resize it,
 		# convert the frame to grayscale, and blur it
 		frame = vs.read()
-		frame = imutils.resize(frame, height=320, width=240)
+		#frame = imutils.resize(frame, height=320, width=240)
 		#gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 		#gray = cv2.GaussianBlur(gray, (7, 7), 0)
 
