@@ -97,7 +97,7 @@ def drawCompass(im, videoWidth, videoHeight, heading):
 	minI = 0
 	maxI = 360
 	compassRange = maxI-minI
-	for i in range(minI, maxI):
+	for i in range(0, 640):
 		# if i%20==0:
 		# 	cv2.line(im, (reduce(i+heading,compassRange)+minI, - screenMargin), (reduce(i+heading,compassRange)+minI, + screenMargin + 10), (hudColorR,hudColorG,hudColorB))
 		# if i%10==0:
@@ -148,7 +148,8 @@ def detect_motion(frameCount):
 		#cv2.putText(frame, str(yprh[3]), (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (onScreenColorR, onScreenColorG, onScreenColorB), 1)
 
 		drawCrosshair(frame, frame.shape[1], frame.shape[0])
-		drawCompass(frame, frame.shape[1], frame.shape[0], int(round(float(yprh[3]))))
+		#drawCompass(frame, frame.shape[1], frame.shape[0], int(round(float(yprh[3]))))
+		drawCompass(frame, 640, frame.shape[0], int(round(float(yprh[3]))))
 		# if the total number of frames has reached a sufficient
 		# number to construct a reasonable background model, then
 		# continue to process the frame
