@@ -101,7 +101,7 @@ def drawCompass(im, videoWidth, videoHeight, heading):
 		if i%20==0:
 			cv2.line(im, (reduce(i+heading,compassRange)+minI, - screenMargin), (reduce(i+heading,compassRange)+minI, + screenMargin + 10), (hudColorR,hudColorG,hudColorB))
 		if i%10==0:
-			cv2.line((reduce(i+heading,compassRange)+minI, - screenMargin), (reduce(i+heading,compassRange)+minI, + screenMargin + 5), (hudColorR,hudColorG,hudColorB))
+			cv2.line(im, (reduce(i+heading,compassRange)+minI, - screenMargin), (reduce(i+heading,compassRange)+minI, + screenMargin + 5), (hudColorR,hudColorG,hudColorB))
 
 		#test
         # if (i == map(0,0,360,minI, maxI))
