@@ -66,8 +66,8 @@ def index():
 	# return the rendered template
 	return render_template("index.html")
 
-def drawYPRH(frame):
-	cv2.putText(frame, str(yprh[3]), (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (onScreenColorR, onScreenColorG, onScreenColorB), 1)
+def drawYPRH(frame, x, y):
+	cv2.putText(frame, str(yprh[3]), (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (onScreenColorR, onScreenColorG, onScreenColorB), 1)
 	# cv2.putText(frame, str(yprh[2]), (40, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
 	# cv2.putText(frame, str(yprh[1]), (80, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
 	# cv2.putText(frame, str(yprh[0]), (120, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
@@ -145,9 +145,9 @@ def detect_motion(frameCount):
 		cv2.putText(frame, str(int(1.0/(time.time()-start_time))), (10, frame.shape[0] - lineSpace), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
 		#Resolution
 		cv2.putText(frame, str(frame.shape[0]), (frame.shape[1] - 80, frame.shape[0] - lineSpace), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
-		cv2.putText(frame, "x", (frame.shape[1] - 60, frame.shape[0] - lineSpace), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
+		cv2.putText(frame, "x", (frame.shape[1] - 65, frame.shape[0] - lineSpace), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
 		cv2.putText(frame, str(frame.shape[1]), (frame.shape[1] - 40, frame.shape[0] - lineSpace), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
-		drawYPRH(frame)
+		drawYPRH(frame, screenMargin, linespace)
 		#cv2.putText(frame, str(yprh[3]), (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (onScreenColorR, onScreenColorG, onScreenColorB), 1)
 
 		drawCrosshair(frame, frame.shape[1], frame.shape[0])
