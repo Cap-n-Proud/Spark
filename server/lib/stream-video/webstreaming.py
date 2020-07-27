@@ -126,13 +126,12 @@ def video_feed():
 	return Response(generate(),
 		mimetype = "multipart/x-mixed-replace; boundary=frame")
 
-def s_test():
-	@sio.on('yprh')
-	def print_data(*yprh):
-	        #print(str(yprh))
-	        print(yprh[3])
+@sio.on('yprh')
+def print_data(*yprh):
+        #print(str(yprh))
+        print(yprh[3])
 
-	sio.connect('http://192.168.1.50:54321')
+sio.connect('http://192.168.1.50:54321')
 
 
 
@@ -153,9 +152,6 @@ if __name__ == '__main__':
 		args["frame_count"],))
 	t.daemon = True
 	t.start()
-	p = threading.Thread(target=s_test)
-	p.daemon = True
-	p.start()
 	# start the flask app
 	app.run(host=args["ip"], port=args["port"], debug=True,
 		threaded=True, use_reloader=False)
