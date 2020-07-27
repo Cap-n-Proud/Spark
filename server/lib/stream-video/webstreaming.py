@@ -97,7 +97,7 @@ def drawCompass(im, videoWidth, videoHeight, heading):
 	minI = 0
 	maxI = 360
 	compassRange = maxI-minI
-	for i in range(0, 640):
+	for i in range(minI, maxI):
 		# if i%20==0:
 		# 	cv2.line(im, (reduce(i+heading,compassRange)+minI, - screenMargin), (reduce(i+heading,compassRange)+minI, + screenMargin + 10), (hudColorR,hudColorG,hudColorB))
 		# if i%10==0:
