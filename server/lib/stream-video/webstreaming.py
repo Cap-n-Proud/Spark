@@ -128,11 +128,11 @@ def video_feed():
 	return Response(generate(),
 		mimetype = "multipart/x-mixed-replace; boundary=frame")
 
-@sio.on('yprh')
+@sio.on('YPRH')
 def print_data(*yprh):
 		#print(str(yprh))
 		global yprh
-		yprh = yprh[3]
+		yprh = YPRH[3]
 		#print(headingV)
 sio.connect('http://192.168.1.50:54321')
 
