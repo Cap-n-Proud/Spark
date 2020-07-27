@@ -127,7 +127,7 @@ def detect_motion(frameCount):
 	# read thus far
 	md = SingleMotionDetector(accumWeight=0.1)
 	total = 0
-
+	lineSpace = 30
 	# loop over frames from the video stream
 	while True:
 		start_time = time.time()
@@ -141,9 +141,12 @@ def detect_motion(frameCount):
 		# grab the current timestamp and draw it on the frame
 		timestamp = datetime.datetime.now()
 		#cv2.putText(frame, timestamp.strftime("%A %d %B %Y %I:%M:%S%p"), (10, frame.shape[0] - 10),cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
-		cv2.putText(frame, str(int(1.0/(time.time()-start_time))), (10, frame.shape[0] - 30), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
-		cv2.putText(frame, str(frame.shape[0]), (10, frame.shape[0] - 80), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
-		cv2.putText(frame, str(frame.shape[1]), (10, frame.shape[0] - 60), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
+		#Framerate
+		cv2.putText(frame, str(int(1.0/(time.time()-start_time))), (10, frame.shape[0] - lineSpace), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
+		#Resolution
+		cv2.putText(frame, str(frame.shape[0]), (frame.shape[1] - 80, frame.shape[0] - lineSpace), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
+		cv2.putText(frame, "x", (frame.shape[1] - 60, frame.shape[0] - lineSpace), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
+		cv2.putText(frame, str(frame.shape[1]), (frame.shape[1] - 40, frame.shape[0] - lineSpace), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
 		drawYPRH(frame)
 		#cv2.putText(frame, str(yprh[3]), (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (onScreenColorR, onScreenColorG, onScreenColorB), 1)
 
