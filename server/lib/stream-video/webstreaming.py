@@ -131,7 +131,7 @@ def print_data(*yprh):
 		#print(str(yprh))
 		global headingV
 		hedingV = yprh[3]
-		#print(yprh[3])
+		print(hedingV)
 sio.connect('http://192.168.1.50:54321')
 print(headingV)
 
