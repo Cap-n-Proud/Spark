@@ -86,6 +86,35 @@ def drawCrosshair(frame, videoWidth, videoHeight):
 	cv2.line(frame, (videoWidth // 2, videoHeight // 2 + 20), (videoWidth // 2, videoHeight // 2 + 40), (hudColorR,hudColorG,hudColorB));
 
 
+def map(x, in_min, in_max, out_min, out_max):
+    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
+
+def  reduce(val, base):
+    return val - parseInt(val / base) * base
+
+
+def drawCompass(im, videoWidth, videoHeight, heading):
+    minI = 0
+    maxI = 360
+    compassRange = maxI-minI
+	for i in range(minI, maxI):
+		if i%20==0:
+			cv2.line(im, (reduce(i+heading,compassRange)+minI, - screenMargin), (reduce(i+heading,compassRange)+minI, + screenMargin + 10), (hudColorR,hudColorG,hudColorB))
+		if i%10==0:
+			cv2.line((reduce(i+heading,compassRange)+minI, - screenMargin), (reduce(i+heading,compassRange)+minI, + screenMargin + 5), (hudColorR,hudColorG,hudColorB))
+
+		#
+        # if (i == map(0,0,360,minI, maxI))
+        #     im.putText("N", new cv.Point(reduce(i+heading+videoWidth/2,compassRange)+minI, 25), fontFace, 0.7*fontSize, new cv.Vec(onScreenColorR, onScreenColorG, onScreenColorB));
+        # if (i == map(270,0,360,minI, maxI))
+        #     im.putText("E", new cv.Point(reduce(i+heading+videoWidth/2,compassRange)+minI, 25), fontFace, 0.7*fontSize, new cv.Vec(onScreenColorR, onScreenColorG, onScreenColorB));
+        # if (i == map(180,0,360,minI, maxI))
+        #     im.putText("S", new cv.Point(reduce(i+heading+videoWidth/2,compassRange)+minI, 25), fontFace, 0.7*fontSize, new cv.Vec(onScreenColorR, onScreenColorG, onScreenColorB));
+        # if (i == map(90,0,360,minI, maxI))
+        #     im.putText("W", new cv.Point(reduce(i+heading+videoWidth/2,compassRange)+minI, 25), fontFace, 0.7*fontSize, new cv.Vec(onScreenColorR, onScreenColorG, onScreenColorB));
+        # drawHeading(im, videoWidth, videoHeight, heading);
+
+
 
 def detect_motion(frameCount):
 	# grab global references to the video stream, output frame, and
@@ -114,6 +143,7 @@ def detect_motion(frameCount):
 		cv2.putText(frame, str(frame.shape[1]), (10, frame.shape[0] - 60), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
 		drawYPRH(frame)
 		drawCrosshair(frame, frame.shape[1], frame.shape[0])
+		drawCompass(frame, frame.shape[1], frame.shape[0], yprh[3]):
 		# if the total number of frames has reached a sufficient
 		# number to construct a reasonable background model, then
 		# continue to process the frame
