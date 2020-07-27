@@ -19,6 +19,10 @@ import socketio
 global headingV
 headingV=999
 global yprh
+yprh[0]=0
+yprh[1]=0
+yprh[2]=0
+yprh[3]=0
 
 # standard Python
 sio = socketio.Client()
