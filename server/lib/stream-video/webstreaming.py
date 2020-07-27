@@ -13,6 +13,7 @@ import datetime
 import imutils
 import time
 import cv2
+import json
 
 import socketio
 
@@ -20,6 +21,12 @@ global headingV
 headingV=999
 global yprh
 yprh=[0,0,0,0]
+
+import pathlib
+print(pathlib.Path(__file__).parent.absolute())
+# parse x:
+#config = json.loads(__dirname + '/config.json')
+
 # standard Python
 sio = socketio.Client()
 #sio.wait()
