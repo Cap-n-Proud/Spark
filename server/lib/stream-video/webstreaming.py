@@ -25,7 +25,7 @@ def print_data(*yprh):
         print(yprh[3])
 
 sio.connect('http://192.168.1.50:54321')
-sio.wait()
+#sio.wait()
 # initialize the output frame and a lock used to ensure thread-safe
 # exchanges of the output frames (useful for multiple browsers/tabs
 # are viewing tthe stream)
