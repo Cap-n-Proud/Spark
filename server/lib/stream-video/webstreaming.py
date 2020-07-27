@@ -82,10 +82,14 @@ def drawYPRH(frame):
 def drawCrosshair(im, videoWidth, videoHeight):
 	#cv2.line(image, start_point, end_point, color, thickness)
 	# note "//" is the int division operator
-	cv2.line(im, (videoWidth // 2 - 20, videoHeight // 2), (videoWidth // 2 - 40, videoHeight // 2), (hudColorR,hudColorG,hudColorB))
+	#cv2.line(im, (videoWidth // 2 - 20, videoHeight // 2), (videoWidth // 2 - 40, videoHeight // 2), (hudColorR,hudColorG,hudColorB))
 	# cv2.line(im, (videoWidth // 2 + 20, videoHeight // 2), (videoWidth // 2 + 40, videoHeight // 2), (hudColorR,hudColorG,hudColorB))
 	# cv2.line(im, (videoWidth // 2, videoHeight // 2 - 20), (videoWidth // 2, videoHeight // 2 - 40), (hudColorR,hudColorG,hudColorB))
 	# cv2.line(im, (videoWidth // 2, videoHeight // 2 + 20), (videoWidth // 2, videoHeight // 2 + 40), (hudColorR,hudColorG,hudColorB));
+	cv2.line(im, (160 - 20, 120), (160 - 40, 120), (hudColorR,hudColorG,hudColorB))
+	cv2.line(im, (160 + 20, 120), (160 + 40, 120), (hudColorR,hudColorG,hudColorB))
+	cv2.line(im, (160, 120 - 20), (160, 120 - 40), (hudColorR,hudColorG,hudColorB))
+	cv2.line(im, (160, 120 + 20), (160, 120 + 40), (hudColorR,hudColorG,hudColorB));
 
 def detect_motion(frameCount):
 	# grab global references to the video stream, output frame, and
