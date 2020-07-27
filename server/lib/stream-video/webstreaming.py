@@ -44,7 +44,7 @@ def get_IP():
 
 	except:
 		print("Unable to get Hostname and IP")
-return host_ip
+	return host_ip
 # Driver code
  #Function call
 
