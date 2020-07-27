@@ -153,14 +153,13 @@ if __name__ == '__main__':
 		args["frame_count"],))
 	t.daemon = True
 	t.start()
-
+	p = threading.Thread(target=s_test)
+	p.daemon = True
+	p.start()
 	# start the flask app
 	app.run(host=args["ip"], port=args["port"], debug=True,
 		threaded=True, use_reloader=False)
-	p = threading.Thread(target=s_test, args=(
-		args["frame_count"],))
-	p.daemon = True
-	p.start()
+
 
 # release the video stream pointer
 vs.stop()
