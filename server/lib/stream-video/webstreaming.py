@@ -80,10 +80,11 @@ def drawCrosshair(im, videoWidth, videoHeight):
 	# cv2.line(im, (videoWidth // 2 + 20, videoHeight // 2), (videoWidth // 2 + 40, videoHeight // 2), (hudColorR,hudColorG,hudColorB))
 	# cv2.line(im, (videoWidth // 2, videoHeight // 2 - 20), (videoWidth // 2, videoHeight // 2 - 40), (hudColorR,hudColorG,hudColorB))
 	# cv2.line(im, (videoWidth // 2, videoHeight // 2 + 20), (videoWidth // 2, videoHeight // 2 + 40), (hudColorR,hudColorG,hudColorB));
-	cv2.line(im, (im.shape[1] // 2 - 20, im.shape[0] // 2), (im.shape[1] // 2 - 40, im.shape[0] // 2), (hudColorR,hudColorG,hudColorB))
-	cv2.line(im, (im.shape[1] // 2 + 20, im.shape[0] // 2), (im.shape[1] // 2 + 40, im.shape[0] // 2), (hudColorR,hudColorG,hudColorB))
-	cv2.line(im, (im.shape[1] // 2, im.shape[0] // 2 - 20), (im.shape[1] // 2, im.shape[0] // 2 - 40), (hudColorR,hudColorG,hudColorB))
-	cv2.line(im, (im.shape[1] // 2, im.shape[0] // 2 + 20), (im.shape[1] // 2, im.shape[0] // 2 + 40), (hudColorR,hudColorG,hudColorB));
+	cv2.line(im, (videoWidth // 2 - 20, videoHeight // 2), (videoWidth // 2 - 40, videoHeight // 2), (hudColorR,hudColorG,hudColorB))
+	cv2.line(im, (videoWidth // 2 + 20, videoHeight // 2), (videoWidth // 2 + 40, videoHeight // 2), (hudColorR,hudColorG,hudColorB))
+	cv2.line(im, (videoWidth // 2, videoHeight // 2 - 20), (videoWidth // 2, videoHeight // 2 - 40), (hudColorR,hudColorG,hudColorB))
+	cv2.line(im, (videoWidth // 2, videoHeight // 2 + 20), (videoWidth // 2, videoHeight // 2 + 40), (hudColorR,hudColorG,hudColorB));
+
 
 
 def detect_motion(frameCount):
@@ -112,7 +113,7 @@ def detect_motion(frameCount):
 		cv2.putText(frame, str(frame.shape[0]), (10, frame.shape[0] - 80), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
 		cv2.putText(frame, str(frame.shape[1]), (10, frame.shape[0] - 60), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
 		drawYPRH(frame)
-		drawCrosshair(frame, videoWidth, videoHeight)
+		drawCrosshair(frame, im.shape[1], im.shape[0])
 		# if the total number of frames has reached a sufficient
 		# number to construct a reasonable background model, then
 		# continue to process the frame
