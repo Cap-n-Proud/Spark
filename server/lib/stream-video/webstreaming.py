@@ -44,7 +44,7 @@ def detect_motion(frameCount):
 	# grab global references to the video stream, output frame, and
 	# lock variables
 	global vs, outputFrame, lock, headingV
-
+	headingV = 0
 	# initialize the motion detector and the total number of frames
 	# read thus far
 	md = SingleMotionDetector(accumWeight=0.1)
@@ -52,7 +52,7 @@ def detect_motion(frameCount):
 	@sio.on('yprh')
 	def print_data(*yprh):
 	        #print(str(yprh))
-			
+
 			hedingV = yprh[3]
 			#print(headingV)
 	# loop over frames from the video stream
