@@ -54,7 +54,7 @@ def detect_motion(frameCount):
 	        #print(str(yprh))
 			global headingV
 			hedingV = yprh[3]
-			print(headingV)
+			print(yprh[3])
 	# loop over frames from the video stream
 	while True:
 		print(headingV)
