@@ -18,6 +18,8 @@ import socketio
 
 global headingV
 headingV=999
+global yprh
+
 # standard Python
 sio = socketio.Client()
 #sio.wait()
@@ -67,7 +69,7 @@ def detect_motion(frameCount):
 			cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
 		cv2.rectangle(frame, (10, 10), (300, 300), (0, 0, 255), 1)
 		cv2.putText(frame, str(int(1.0/(time.time()-start_time))), (100, frame.shape[0] - 30), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
-		cv2.putText(frame, str(headingV), (10, frame.shape[0] - 60), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
+		cv2.putText(frame, str(yprh[3]), (10, frame.shape[0] - 60), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
 
 
 		# if the total number of frames has reached a sufficient
@@ -129,8 +131,8 @@ def video_feed():
 @sio.on('yprh')
 def print_data(*yprh):
 		#print(str(yprh))
-		global headingV
-		headingV = yprh[3]
+		global yprh
+		yprh = yprh[3]
 		#print(headingV)
 sio.connect('http://192.168.1.50:54321')
 
