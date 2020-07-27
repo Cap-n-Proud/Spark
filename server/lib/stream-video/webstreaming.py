@@ -149,7 +149,7 @@ def detect_motion(frameCount):
 
 		drawCrosshair(frame, frame.shape[1], frame.shape[0])
 		#drawCompass(frame, frame.shape[1], frame.shape[0], int(round(float(yprh[3]))))
-		drawCompass(frame, 640, frame.shape[0], int(round(float(yprh[3]))))
+		drawCompass(frame, frame.shape[1], frame.shape[0], int(round(float(yprh[3]))))
 		# if the total number of frames has reached a sufficient
 		# number to construct a reasonable background model, then
 		# continue to process the frame
