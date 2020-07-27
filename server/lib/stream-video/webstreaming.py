@@ -67,7 +67,7 @@ def detect_motion(frameCount):
 			cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
 		cv2.rectangle(frame, (10, 10), (300, 300), (0, 0, 255), 1)
 		cv2.putText(frame, str(int(1.0/(time.time()-start_time))), (10, frame.shape[0] - 30), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
-		#cv2.putText(yprh[3], str(int(1.0/(time.time()-start_time))), (10, frame.shape[0] - 30), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
+		cv2.putText(headingV, str(int(1.0/(time.time()-start_time))), (10, frame.shape[0] - 30), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
 
 
 		# if the total number of frames has reached a sufficient
@@ -126,9 +126,11 @@ def video_feed():
 	return Response(generate(),
 		mimetype = "multipart/x-mixed-replace; boundary=frame")
 
+headingV = 0
 @sio.on('yprh')
 def print_data(*yprh):
         #print(str(yprh))
+
         print(yprh[3])
 
 sio.connect('http://192.168.1.50:54321')
