@@ -16,7 +16,7 @@ import cv2
 
 import socketio
 
-
+global headingV
 headingV=999
 # standard Python
 sio = socketio.Client()
@@ -66,7 +66,7 @@ def detect_motion(frameCount):
 			"%A %d %B %Y %I:%M:%S%p"), (10, frame.shape[0] - 10),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
 		cv2.rectangle(frame, (10, 10), (300, 300), (0, 0, 255), 1)
-		cv2.putText(frame, str(int(1.0/(time.time()-start_time))), (10, frame.shape[0] - 30), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
+		cv2.putText(frame, str(int(1.0/(time.time()-start_time))), (100, frame.shape[0] - 30), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
 		cv2.putText(frame, str(headingV), (10, frame.shape[0] - 60), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
 
 
@@ -133,7 +133,6 @@ def print_data(*yprh):
 		hedingV = yprh[3]
 		print(hedingV)
 sio.connect('http://192.168.1.50:54321')
-print(headingV)
 
 
 	# check to see if this is the main thread of execution
