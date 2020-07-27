@@ -52,9 +52,9 @@ def detect_motion(frameCount):
 	@sio.on('yprh')
 	def print_data(*yprh):
 	        #print(str(yprh))
-
+			global headingV
 			hedingV = yprh[3]
-			#print(headingV)
+			print(headingV)
 	# loop over frames from the video stream
 	while True:
 		print(headingV)
