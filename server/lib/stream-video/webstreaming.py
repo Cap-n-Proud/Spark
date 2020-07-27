@@ -52,7 +52,6 @@ def detect_motion(frameCount):
 
 	# loop over frames from the video stream
 	while True:
-		print(yprh[3])
 		start_time = time.time()
 		# read the next frame from the video stream, resize it,
 		# convert the frame to grayscale, and blur it
