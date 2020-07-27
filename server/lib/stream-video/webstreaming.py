@@ -44,7 +44,6 @@ def detect_motion(frameCount):
 	# grab global references to the video stream, output frame, and
 	# lock variables
 	global vs, outputFrame, lock
-	headingV = 0
 	# initialize the motion detector and the total number of frames
 	# read thus far
 	md = SingleMotionDetector(accumWeight=0.1)
