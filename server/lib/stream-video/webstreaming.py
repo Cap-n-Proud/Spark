@@ -144,7 +144,7 @@ def detect_motion(frameCount):
 		#Framerate
 		cv2.putText(frame, str(int(1.0/(time.time()-start_time))), (screenMargin, frame.shape[0] - lineSpace), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
 		#Resolution
-		cv2.putText(frame, str(frame.shape[0]), (frame.shape[1] - 80, frame.shape[0] - lineSpace), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
+		cv2.putText(frame, str(frame.shape[1]), (frame.shape[1] - 80, frame.shape[0] - lineSpace), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
 		cv2.putText(frame, "x", (frame.shape[1] - 55, frame.shape[1] - lineSpace), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
 		cv2.putText(frame, str(frame.shape[1]), (frame.shape[1] - screenMargin, frame.shape[0] - lineSpace), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
 		drawYPRH(frame, screenMargin, 2 * lineSpace)
