@@ -106,7 +106,7 @@ def drawCompass(im, videoWidth, videoHeight, heading):
 			cv2.line(im, ((i+heading)+minI, - screenMargin), ((i+heading)+minI, + screenMargin + 10), (hudColorR,hudColorG,hudColorB))
 		if i%10==0:
 			cv2.line(im, ((i+heading)+minI, - screenMargin), ((i+heading)+minI, + screenMargin + 5), (hudColorR,hudColorG,hudColorB))
-		K = 2
+		K = 1
 		if (i == K * map(0,0,360,minI, maxI)):
 			cv2.putText(im, "N", (reduce(i+heading+videoWidth//2,compassRange)+minI, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (onScreenColorR, onScreenColorG, onScreenColorB))
 		if (i == K * map(270,0,360,minI, maxI)):
