@@ -38,13 +38,10 @@ import socket
 # Function to display hostname and
 # IP address
 def get_IP():
-	try:
-		host_name = socket.gethostname()
-		host_ip = socket.gethostbyname(host_name)
+	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    return s.getsockname()[0]
 
-	except:
-		print("Unable to get Hostname and IP")
-	return host_ip
 # Driver code
  #Function call
 
