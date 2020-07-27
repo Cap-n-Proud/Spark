@@ -24,7 +24,6 @@ yprh=[0,0,0,0]
 
 import pathlib
 p = pathlib.Path(__file__).parent.absolute()
-print(str(p.parent.parent) + '/config.json')
 
 f = open(str(p.parent.parent) + '/config.json')
 # parse x:
@@ -46,6 +45,7 @@ videoHeight = config['video']['videoHeight']
 fontSize = config['video']['fontSize']
 
 
+print(videoWidth, videoHeight)
 
 
 
@@ -81,6 +81,7 @@ def drawYPRH(frame):
 
 def drawCrosshair(im, videoWidth, videoHeight):
 	#cv2.line(image, start_point, end_point, color, thickness)
+	# note "//" is the int division operator
 	cv2.line(im, (videoWidth // 2 - 20, videoHeight // 2), (videoWidth // 2 - 40, videoHeight // 2), (hudColorR,hudColorG,hudColorB))
 	cv2.line(im, (videoWidth // 2 + 20, videoHeight // 2), (videoWidth // 2 + 40, videoHeight // 2), (hudColorR,hudColorG,hudColorB))
 	cv2.line(im, (videoWidth // 2, videoHeight // 2 - 20), (videoWidth // 2, videoHeight // 2 - 40), (hudColorR,hudColorG,hudColorB))
