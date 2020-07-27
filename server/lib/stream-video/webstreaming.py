@@ -130,8 +130,8 @@ def video_feed():
 def print_data(*yprh):
 		#print(str(yprh))
 		global headingV
-		hedingV = yprh[3]
-		print(hedingV)
+		headingV = yprh[3]
+		print(headingV)
 sio.connect('http://192.168.1.50:54321')
 
 
@@ -149,7 +149,7 @@ if __name__ == '__main__':
 
 	# start a thread that will perform motion detection
 	t = threading.Thread(target=detect_motion, args=(
-		args["hedingV"],))
+		args["frame_count"],))
 	t.daemon = True
 	t.start()
 	# start the flask app
