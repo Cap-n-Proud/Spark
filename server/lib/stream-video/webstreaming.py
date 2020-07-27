@@ -67,7 +67,7 @@ def detect_motion(frameCount):
 			cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
 		cv2.rectangle(frame, (10, 10), (300, 300), (0, 0, 255), 1)
 		cv2.putText(frame, str(int(1.0/(time.time()-start_time))), (10, frame.shape[0] - 30), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
-		cv2.putText(headingV, str(int(1.0/(time.time()-start_time))), (10, frame.shape[0] - 30), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
+		cv2.putText(headingV, str(int(1.0/(time.time()-start_time))), (10, frame.shape[0] - 60), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
 
 
 		# if the total number of frames has reached a sufficient
