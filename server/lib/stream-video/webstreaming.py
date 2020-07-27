@@ -83,10 +83,14 @@ def drawYPRH(frame):
 def drawCrosshair(im, videoWidth, videoHeight):
 	#cv2.line(image, start_point, end_point, color, thickness)
 	# note "//" is the int division operator
-	cv2.line(im, (videoWidth // 2 - 20, videoHeight // 2), (videoWidth // 2 - 40, videoHeight // 2), (hudColorR,hudColorG,hudColorB))
-	cv2.line(im, (videoWidth // 2 + 20, videoHeight // 2), (videoWidth // 2 + 40, videoHeight // 2), (hudColorR,hudColorG,hudColorB))
-	cv2.line(im, (videoWidth // 2, videoHeight // 2 - 20), (videoWidth // 2, videoHeight // 2 - 40), (hudColorR,hudColorG,hudColorB))
-	cv2.line(im, (videoWidth // 2, videoHeight // 2 + 20), (videoWidth // 2, videoHeight // 2 + 40), (hudColorR,hudColorG,hudColorB));
+	# cv2.line(im, (videoWidth // 2 - 20, videoHeight // 2), (videoWidth // 2 - 40, videoHeight // 2), (hudColorR,hudColorG,hudColorB))
+	# cv2.line(im, (videoWidth // 2 + 20, videoHeight // 2), (videoWidth // 2 + 40, videoHeight // 2), (hudColorR,hudColorG,hudColorB))
+	# cv2.line(im, (videoWidth // 2, videoHeight // 2 - 20), (videoWidth // 2, videoHeight // 2 - 40), (hudColorR,hudColorG,hudColorB))
+	# cv2.line(im, (videoWidth // 2, videoHeight // 2 + 20), (videoWidth // 2, videoHeight // 2 + 40), (hudColorR,hudColorG,hudColorB));
+	cv2.line(im, (im.shape[0] // 2 - 20, im.shape[1] // 2), (im.shape[0] // 2 - 40, im.shape[1] // 2), (hudColorR,hudColorG,hudColorB))
+	cv2.line(im, (im.shape[0] // 2 + 20, im.shape[1] // 2), (im.shape[0] // 2 + 40, im.shape[1] // 2), (hudColorR,hudColorG,hudColorB))
+	cv2.line(im, (im.shape[0] // 2, im.shape[1] // 2 - 20), (im.shape[0] // 2, im.shape[1] // 2 - 40), (hudColorR,hudColorG,hudColorB))
+	cv2.line(im, (im.shape[0] // 2, im.shape[1] // 2 + 20), (im.shape[0] // 2, im.shape[1] // 2 + 40), (hudColorR,hudColorG,hudColorB));
 
 
 def detect_motion(frameCount):
