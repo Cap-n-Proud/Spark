@@ -128,7 +128,7 @@ def video_feed():
 	return Response(generate(),
 		mimetype = "multipart/x-mixed-replace; boundary=frame")
 
-@sio.on('YPRH')
+@sio.on('yprh')
 def print_data(*YPRH):
 		#print(str(yprh))
 		global yprh
