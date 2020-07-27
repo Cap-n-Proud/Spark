@@ -149,7 +149,7 @@ if __name__ == '__main__':
 
 	# start a thread that will perform motion detection
 	t = threading.Thread(target=detect_motion, args=(
-		args["frame_count"],))
+		args["hedingV"],))
 	t.daemon = True
 	t.start()
 	# start the flask app
