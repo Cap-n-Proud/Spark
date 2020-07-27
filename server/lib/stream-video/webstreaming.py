@@ -132,9 +132,8 @@ def video_feed():
 def print_data(*YPRH):
 		#print(str(yprh))
 		global yprh
-		yprh = YPRH[3]
-		print(yprh[3])
-		print(YPRH[3])
+		yprh = YPRH
+
 
 sio.connect('http://192.168.1.50:54321')
 
