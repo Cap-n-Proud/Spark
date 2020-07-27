@@ -85,7 +85,7 @@ def drawCrosshair(im, videoWidth, videoHeight):
     # im.drawLine(new cv.Point(videoWidth / 2 + 20, videoHeight / 2), new cv.Point(videoWidth / 2 + 40, videoHeight / 2), new cv.Vec(hudColorR,hudColorG,hudColorB));
     # im.drawLine(new cv.Point(videoWidth / 2, videoHeight / 2 - 20), new cv.Point(videoWidth / 2, videoHeight / 2 - 40), new cv.Vec(hudColorR,hudColorG,hudColorB));
     # im.drawLine(new cv.Point(videoWidth / 2, videoHeight / 2 + 20), new cv.Point(videoWidth / 2, videoHeight / 2 + 40), new cv.Vec(hudColorR,hudColorG,hudColorB));
-}
+
 def detect_motion(frameCount):
 	# grab global references to the video stream, output frame, and
 	# lock variables
