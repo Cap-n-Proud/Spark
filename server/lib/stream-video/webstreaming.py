@@ -43,7 +43,7 @@ onScreenColorG = config['video']['onScreenColorG']
 onScreenColorB = config['video']['onScreenColorB']
 videoWidth = config['video']['videoWidth']
 videoHeight = config['video']['videoHeight']
-fontSize = videoWidth * config['video']['fontBaseSize'] / 320;
+fontSize = config['video']['fontSize']
 
 
 
