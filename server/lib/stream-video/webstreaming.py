@@ -103,7 +103,7 @@ def drawCompass(im, videoWidth, videoHeight, heading):
 		if i%10==0:
 			cv2.line((reduce(i+heading,compassRange)+minI, - screenMargin), (reduce(i+heading,compassRange)+minI, + screenMargin + 5), (hudColorR,hudColorG,hudColorB))
 
-		#
+		#test
         # if (i == map(0,0,360,minI, maxI))
         #     im.putText("N", new cv.Point(reduce(i+heading+videoWidth/2,compassRange)+minI, 25), fontFace, 0.7*fontSize, new cv.Vec(onScreenColorR, onScreenColorG, onScreenColorB));
         # if (i == map(270,0,360,minI, maxI))
