@@ -47,7 +47,7 @@
     "onScreenColorR": 0,
     "onScreenColorG": 255,
     "onScreenColorB": 0,
-    "fontBaseSize": "0.5",
+    "fontSize": "0.35",
     "hudColorR": 0,
     "hudColorG": 255,
     "hudColorB": 0
