@@ -23,7 +23,8 @@ global yprh
 yprh=[0,0,0,0]
 
 import pathlib
-print(pathlib.Path(__file__).parent.absolute())
+p = pathlib.Path(__file__).parent.absolute()
+print(parent[2])
 # parse x:
 #config = json.loads(__dirname + '/config.json')
 
