@@ -147,7 +147,7 @@ def detect_motion(frameCount):
 		cv2.putText(frame, str(frame.shape[0]), (frame.shape[1] - 80, frame.shape[0] - lineSpace), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
 		cv2.putText(frame, "x", (frame.shape[1] - 65, frame.shape[0] - lineSpace), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
 		cv2.putText(frame, str(frame.shape[1]), (frame.shape[1] - 40, frame.shape[0] - lineSpace), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
-		drawYPRH(frame, screenMargin, linespace)
+		drawYPRH(frame, screenMargin, lineSpace)
 		#cv2.putText(frame, str(yprh[3]), (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (onScreenColorR, onScreenColorG, onScreenColorB), 1)
 
 		drawCrosshair(frame, frame.shape[1], frame.shape[0])
