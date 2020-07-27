@@ -14,6 +14,18 @@ import imutils
 import time
 import cv2
 
+import socketio
+
+
+# standard Python
+sio = socketio.Client()
+@sio.on('yprh')
+def print_data(*yprh):
+        #print(str(yprh))
+        print(yprh[3])
+
+sio.connect('http://192.168.1.50:54321')
+sio.wait()
 # initialize the output frame and a lock used to ensure thread-safe
 # exchanges of the output frames (useful for multiple browsers/tabs
 # are viewing tthe stream)
@@ -26,7 +38,7 @@ app = Flask(__name__)
 # initialize the video stream and allow the camera sensor to
 # warmup
 #vs = VideoStream(usePiCamera=1).start()
-vs = VideoStream(src=0,resolution=(1920,1440)).start()
+vs = VideoStream(src=0,resolution=(640,480)).start()
 time.sleep(2.0)
 
 @app.route("/")
@@ -46,7 +58,7 @@ def detect_motion(frameCount):
 
 	# loop over frames from the video stream
 	while True:
-		start_time = time.time() 
+		start_time = time.time()
 		# read the next frame from the video stream, resize it,
 		# convert the frame to grayscale, and blur it
 		frame = vs.read()
@@ -76,7 +88,7 @@ def detect_motion(frameCount):
 		#		(thresh, (minX, minY, maxX, maxY)) = motion
 		#		cv2.rectangle(frame, (minX, minY), (maxX, maxY),
 		#			(0, 0, 255), 2)
-		
+
 		# update the background model and increment the total number
 		# of frames read thus far
 		#md.update(gray)
@@ -86,7 +98,7 @@ def detect_motion(frameCount):
 		# lock
 		with lock:
 			outputFrame = frame.copy()
-		
+
 def generate():
 	# grab global references to the output frame and lock variables
 	global outputFrame, lock
@@ -108,7 +120,7 @@ def generate():
 				continue
 
 		# yield the output frame in the byte format
-		yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + 
+		yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' +
 			bytearray(encodedImage) + b'\r\n')
 
 @app.route("/video_feed")
