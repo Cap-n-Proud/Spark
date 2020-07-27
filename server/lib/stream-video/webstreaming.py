@@ -26,7 +26,7 @@ import pathlib
 p = pathlib.Path(__file__).parent.absolute()
 print(str(p.parent.parent) + '/config.json')
 
-f = open(str(p.parent.parent) + '/config.json'))
+f = open(str(p.parent.parent) + '/config.json')
 # parse x:
 config = json.load(f)
 print(config['video']['FPS'])
