@@ -143,7 +143,7 @@ def detect_motion(frameCount):
 		cv2.putText(frame, str(frame.shape[1]), (10, frame.shape[0] - 60), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
 		drawYPRH(frame)
 		drawCrosshair(frame, frame.shape[1], frame.shape[0])
-		drawCompass(frame, frame.shape[1], frame.shape[0], yprh[3]):
+		drawCompass(frame, frame.shape[1], frame.shape[0], yprh[3])
 		# if the total number of frames has reached a sufficient
 		# number to construct a reasonable background model, then
 		# continue to process the frame
