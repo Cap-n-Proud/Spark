@@ -26,8 +26,9 @@ import pathlib
 p = pathlib.Path(__file__).parent.absolute()
 print(str(p.parent.parent) + '/config.json')
 
+f = open(str(p.parent.parent) + '/config.json'))
 # parse x:
-config = json.loads('/home/pi/Spark/server/config.json')
+config = json.load(f)
 print(config['video']['FPS'])
 # standard Python
 sio = socketio.Client()
