@@ -19,12 +19,6 @@ import socketio
 
 # standard Python
 sio = socketio.Client()
-@sio.on('yprh')
-def print_data(*yprh):
-        #print(str(yprh))
-        print(yprh[3])
-
-sio.connect('http://192.168.1.50:54321')
 #sio.wait()
 # initialize the output frame and a lock used to ensure thread-safe
 # exchanges of the output frames (useful for multiple browsers/tabs
@@ -151,6 +145,12 @@ if __name__ == '__main__':
 	# start the flask app
 	app.run(host=args["ip"], port=args["port"], debug=True,
 		threaded=True, use_reloader=False)
+	@sio.on('yprh')
+	def print_data(*yprh):
+	        #print(str(yprh))
+	        print(yprh[3])
+
+	sio.connect('http://192.168.1.50:54321')
 
 # release the video stream pointer
 vs.stop()
