@@ -71,7 +71,7 @@ def drawYPRH(frame, x, y):
 	# cv2.putText(frame, str(yprh[2]), (40, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
 	# cv2.putText(frame, str(yprh[1]), (80, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
 	# cv2.putText(frame, str(yprh[0]), (120, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
-	cv2.rectangle(frame, (70 + x,70 + y), (30 + x,55 + y), (onScreenColorR, onScreenColorG, onScreenColorB), 1)
+	#cv2.rectangle(frame, (70 + x,70 + y), (30 + x,55 + y), (onScreenColorR, onScreenColorG, onScreenColorB), 1)
 
 
 def drawCrosshair(frame, videoWidth, videoHeight):
