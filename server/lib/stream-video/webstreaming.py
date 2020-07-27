@@ -45,7 +45,7 @@ videoHeight = config['video']['videoHeight']
 fontSize = config['video']['fontSize']
 
 
-print(videoWidth, videoHeight)
+print(videoWidth // 2, videoHeight)
 
 
 
