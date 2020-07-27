@@ -141,7 +141,9 @@ def detect_motion(frameCount):
 		cv2.putText(frame, str(int(1.0/(time.time()-start_time))), (10, frame.shape[0] - 30), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
 		cv2.putText(frame, str(frame.shape[0]), (10, frame.shape[0] - 80), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
 		cv2.putText(frame, str(frame.shape[1]), (10, frame.shape[0] - 60), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
-		drawYPRH(frame)
+		#drawYPRH(frame)
+		cv2.putText(frame, str(yprh[3]), (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (onScreenColorR, onScreenColorG, onScreenColorB), 1)
+
 		drawCrosshair(frame, frame.shape[1], frame.shape[0])
 		drawCompass(frame, frame.shape[1], frame.shape[0], yprh[3])
 		# if the total number of frames has reached a sufficient
@@ -205,7 +207,9 @@ def print_data(*YPRH):
 		#print(str(yprh))
 		global yprh
 		yprh = YPRH
-		print(yprh[3])
+		global headingV
+		headingV = yprh[3]
+		#print(yprh[3])
 
 
 sio.connect('http://192.168.1.50:54321')
