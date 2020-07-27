@@ -126,7 +126,17 @@ def video_feed():
 	return Response(generate(),
 		mimetype = "multipart/x-mixed-replace; boundary=frame")
 
-# check to see if this is the main thread of execution
+def s_test():
+	@sio.on('yprh')
+	def print_data(*yprh):
+	        #print(str(yprh))
+	        print(yprh[3])
+
+	sio.connect('http://192.168.1.50:54321')
+
+
+
+	# check to see if this is the main thread of execution
 if __name__ == '__main__':
 	# construct the argument parser and parse command line arguments
 	ap = argparse.ArgumentParser()
@@ -147,12 +157,10 @@ if __name__ == '__main__':
 	# start the flask app
 	app.run(host=args["ip"], port=args["port"], debug=True,
 		threaded=True, use_reloader=False)
-	@sio.on('yprh')
-	def print_data(*yprh):
-	        #print(str(yprh))
-	        print(yprh[3])
-
-	sio.connect('http://192.168.1.50:54321')
+	p = threading.Thread(target=s_test, args=(
+		args["frame_count"],))
+	p.daemon = True
+	p.start()
 
 # release the video stream pointer
 vs.stop()
