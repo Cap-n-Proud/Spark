@@ -36,8 +36,8 @@
   },
   "video": {
     "port": 9999,
-    "videoWidth": 320,
-    "videoHeight": 240,
+    "videoWidth": 640,
+    "videoHeight": 480,
     "videoSource": 0,
     "FPS": 20,
     "screenMargin": 3,

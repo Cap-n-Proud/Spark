@@ -44,13 +44,6 @@ videoWidth = config['video']['videoWidth']
 videoHeight = config['video']['videoHeight']
 fontSize = config['video']['fontSize']
 
-
-print( (videoWidth // 2 - 20, videoHeight // 2))
-print((videoWidth // 2 - 40, videoHeight // 2))
-
-
-
-
 sio = socketio.Client()
 #sio.wait()
 # initialize the output frame and a lock used to ensure thread-safe
@@ -108,7 +101,7 @@ def detect_motion(frameCount):
 		# read the next frame from the video stream, resize it,
 		# convert the frame to grayscale, and blur it
 		frame = vs.read()
-		frame = imutils.resize(frame, height=320, width=240)
+		frame = imutils.resize(frame, height=640, width=480)
 		#gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 		#gray = cv2.GaussianBlur(gray, (7, 7), 0)
 
