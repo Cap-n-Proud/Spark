@@ -1,5 +1,5 @@
 # USAGE
-# python webstreaming.py --ip 0.0.0.0 --port 8000
+#https://www.pyimagesearch.com/2019/09/02/opencv-stream-video-to-web-browser-html-page/
 
 # import the necessary packages
 from pyimagesearch.motion_detection import SingleMotionDetector
@@ -31,6 +31,25 @@ f = open(str(p.parent.parent) + '/config.json')
 config = json.load(f)
 #print(config['video']['FPS'])
 # standard Python
+
+FPS = config['video']['FPS']
+screenMargin = config['video']['screenMargin']
+videoSource = config['video']['videoSource']
+hudColorR = config['video']['hudColorR']
+hudColorG = config['video']['hudColorG']
+hudColorB = config['video']['hudColorB']
+onScreenColorR = config['video']['onScreenColorR']
+onScreenColorG = config['video']['onScreenColorG']
+onScreenColorB = config['video']['onScreenColorB']
+videoWidth = config['video']['videoWidth']
+videoHeight = config['video']['videoHeight']
+fontSize = videoWidth * config['video']['fontBaseSize'] / 320;
+
+
+
+
+
+
 sio = socketio.Client()
 #sio.wait()
 # initialize the output frame and a lock used to ensure thread-safe
@@ -54,7 +73,7 @@ def index():
 	return render_template("index.html")
 
 def drawYPRH(frame):
-	cv2.putText(frame, str(yprh[3]), (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
+	cv2.putText(frame, str(yprh[3]), (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (onScreenColorR, onScreenColorG, onScreenColorB), 1)
 	# cv2.putText(frame, str(yprh[2]), (40, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
 	# cv2.putText(frame, str(yprh[1]), (80, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
 	# cv2.putText(frame, str(yprh[0]), (120, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 255, 0), 1)
@@ -168,7 +187,7 @@ if __name__ == '__main__':
 	t.daemon = True
 	t.start()
 	# start the flask app
-	app.run(host=args["ip"], port=args["port"], debug=True,
+	app.run(host=args["ip"], port=config['video']['port'], debug=True,
 		threaded=True, use_reloader=False)
 
 
