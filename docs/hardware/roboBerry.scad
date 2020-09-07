@@ -20,7 +20,7 @@ THE SOFTWARE.
 
 ---------------------------------------------------------
 */
-$fn = 30;
+$fn = 80;
 edgeRounding = 2; //Useful to calculate size for Minkowski transformation
 baseX = 165;
 baseY = 120;
@@ -60,7 +60,7 @@ module caster(casterD) {
             difference() {
                 sphere(r = casterD / 2, center = true);
 
-                translate([0, 0, 3 * casterD / 2 + casterD / 4 - edgeRounding]) cube([3 * casterD, 3 * casterD, 3 * casterD], center = true);
+                translate([0, 0, 3 * casterD / 2 + casterD / 5 - edgeRounding]) cube([3 * casterD, 3 * casterD, 3 * casterD], center = true);
                 translate([0, 0, -(3 * casterD / 2 + casterD / 4 - edgeRounding)]) cube([3 * casterD, 3 * casterD, 3 * casterD], center = true);
 
 
@@ -225,11 +225,34 @@ module casterPillarR() {
     //translate([casterD/4+3/2*casterD/2+T,0,0])rotate([0,0,180])SUB_casterPillar();
 }
 
-module casterSupports() {
+module casterSupportL() {
     difference() {
         rotate([0, 0, 90]) translate([-casterD / 2, +casterD / 2, -2 * casterD + 10]) {
 
             casterPillarL();
+            //casterPillarR();
+        }
+        back();
+
+    }
+}
+
+module casterSupport() {
+    difference() {
+        rotate([0, 0, 90]) translate([-casterD / 2, +casterD / 2, -2 * casterD + 10]) {
+
+            casterPillarL();
+            casterPillarR();
+        }
+        back();
+
+    }
+}
+module casterSupportR() {
+    difference() {
+        rotate([0, 0, 90]) translate([-casterD / 2, +casterD / 2, -2 * casterD + 10]) {
+
+            //casterPillarL();
             casterPillarR();
         }
         back();
@@ -379,9 +402,12 @@ translate([baseX/2-30,baseY/2,-frontWheelZ])rotate([90,0,0])cylinder(r=frontWhee
 translate([-baseX/2,baseY/2,-casterPillarZ])rotate([90,0,0])caster(casterD);
 */
 
-//caster(casterD);
-translate([-baseX/2,0-,-casterPillarZ/2])rotate([0,0,0])casterSupports();
+caster(casterD);
+//casterSupportL();
+//translate([30,0,0])casterSupportL();
 //nema17(32.84,"N",1);
-base();
+//base();
 //supportPCB_secondLevel();
 //translate([0,0,-casterPillarZ])supportPCB_firstLevel();
+//translate([-casterD/2,0,-casterD])rotate([90,0,0])caster(casterD);
+//casterSupport();
