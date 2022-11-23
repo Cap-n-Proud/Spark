@@ -11,7 +11,7 @@
         "morgan": "~1.9.1",
         "node-opencv": "0.0.2-security",
         "opencv4nodejs": "^4.17.0",
-        "socket.io": "^2.4.0"
+        "socket.io": "^2.5.0"
     },
     "author": "Mudassir H",
     "license": ""
